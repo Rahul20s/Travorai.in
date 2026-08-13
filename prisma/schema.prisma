@@ -1,0 +1,248 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  clerkId       String   @unique
+  name          String?
+  email         String   @unique
+  avatarUrl     String?
+  preferences   Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  trips           Trip[]              @relation("TripOwner")
+  collaborations  TripCollaborator[]
+  chatMessages    ChatMessage[]
+  expensesPaid    Expense[]
+  inspirationPosts InspirationPost[]
+  savedItems      SavedItem[]
+  travelProfile   TravelProfile?
+  tripSelections  TripSelection[]
+}
+
+model TravelProfile {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  travelStyles      String[]
+  defaultBudget     Int?
+  homeCity          String?
+  defaultCurrency   String   @default("INR")
+  languages         String[]
+  companions        String[]
+  foodPreferences   String[]
+  preferredAirlines String[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Trip {
+  id           String   @id @default(cuid())
+  ownerId      String
+  owner        User     @relation("TripOwner", fields: [ownerId], references: [id])
+  name         String
+  destination  String
+  coverImage   String?
+  startDate    DateTime?
+  endDate      DateTime?
+  status       TripStatus @default(PLANNING)
+  plan         Json?
+  budget       Int?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  collaborators    TripCollaborator[]
+  itineraryItems   ItineraryItem[]
+  bookings         Booking[]
+  expenses         Expense[]
+  chatMessages     ChatMessage[]
+  selections       TripSelection[]
+}
+
+enum TripStatus {
+  PLANNING
+  BOOKED
+  ACTIVE
+  COMPLETED
+}
+
+model TripCollaborator {
+  id        String   @id @default(cuid())
+  tripId    String
+  trip      Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  role      CollabRole @default(EDITOR)
+  invitedAt DateTime @default(now())
+  @@unique([tripId, userId])
+}
+
+enum CollabRole {
+  OWNER
+  EDITOR
+  VIEWER
+}
+
+model ItineraryItem {
+  id          String   @id @default(cuid())
+  tripId      String
+  trip        Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  type        ItemType
+  dayIndex    Int
+  orderIndex  Int
+  title       String
+  details     Json?
+  startTime   DateTime?
+  endTime     DateTime?
+  latitude    Float?
+  longitude   Float?
+  source      ItemSource @default(MANUAL)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  bookings    Booking[]
+}
+
+enum ItemType {
+  FLIGHT
+  STAY
+  ACTIVITY
+  RESTAURANT
+  TRANSPORT
+  NOTE
+}
+
+enum ItemSource {
+  MANUAL
+  AI
+  INSPIRATION
+}
+
+model Booking {
+  id                String   @id @default(cuid())
+  tripId            String
+  trip              Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  itineraryItemId   String?
+  itineraryItem     ItineraryItem? @relation(fields: [itineraryItemId], references: [id])
+  type              ItemType
+  provider          String?
+  confirmationNumber String?
+  price             Float?
+  currency          String?
+  rawSourceText     String?
+  parsedData        Json?
+  status            BookingStatus @default(CONFIRMED)
+  createdAt         DateTime @default(now())
+}
+
+enum BookingStatus {
+  CONFIRMED
+  PENDING
+  CANCELLED
+}
+
+enum TripSelectionType {
+  FLIGHT
+  HOTEL
+  ACTIVITY
+  TRANSPORT
+}
+
+model TripSelection {
+  id                String            @id @default(cuid())
+  tripId            String
+  trip              Trip              @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  userId            String
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type              TripSelectionType
+  provider          String
+  providerOptionId  String
+  price             Float
+  currency          String
+  parsedData        Json              
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@index([tripId])
+  @@index([userId])
+  @@index([tripId, type])
+}
+
+model Expense {
+  id            String   @id @default(cuid())
+  tripId        String
+  trip          Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  paidByUserId  String
+  paidBy        User     @relation(fields: [paidByUserId], references: [id])
+  amount        Float
+  currency      String
+  category      String
+  splitBetween  Json
+  createdAt     DateTime @default(now())
+}
+
+model ChatMessage {
+  id          String   @id @default(cuid())
+  tripId      String?  // nullable: pre-trip exploratory chat
+  trip        Trip?    @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  role        MessageRole
+  content     String
+  structuredPayload Json?
+  createdAt   DateTime @default(now())
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+}
+
+model InspirationPost {
+  id              String   @id @default(cuid())
+  authorId        String
+  author          User     @relation(fields: [authorId], references: [id])
+  title           String
+  destination     String
+  coverImage      String?
+  itineraryItems  Json
+  likesCount      Int      @default(0)
+  createdAt       DateTime @default(now())
+  savedItems      SavedItem[]
+}
+
+enum SavedItemType {
+  DESTINATION
+  HOTEL
+  ACTIVITY
+  INSPIRATION
+  OTHER
+}
+
+model SavedItem {
+  id                  String   @id @default(cuid())
+  userId              String
+  user                User     @relation(fields: [userId], references: [id])
+  
+  // Optional relations
+  inspirationPostId   String?
+  inspirationPost     InspirationPost? @relation(fields: [inspirationPostId], references: [id])
+  
+  // Direct Saving Fields
+  title               String?  
+  type                SavedItemType?  
+  location            String?  
+  image               String?  
+  description         String?  
+
+  savedAt             DateTime @default(now())
+
+  @@index([userId])
+  @@index([userId, type])
+}
+
