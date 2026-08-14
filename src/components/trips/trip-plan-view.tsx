@@ -10,6 +10,7 @@ import {
   ChevronRight,
   CircleDollarSign,
   Clock,
+  ExternalLink,
   Hotel,
   Loader2,
   Map,
@@ -23,6 +24,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 import type { TripPlan, TripDayItem } from "@/types/trip";
+
+function getTravelpayoutsUrl(type: "hotel" | "flight" | "train", destination: string) {
+  const marker = process.env.NEXT_PUBLIC_TRAVELPAYOUTS_MARKER || "561821";
+  const dest = encodeURIComponent(destination || "India");
+
+  if (type === "hotel") {
+    return `https://hotellook.tp.st/search?destination=${dest}&marker=${marker}`;
+  }
+  return `https://aviasales.tp.st/search?destination=${dest}&marker=${marker}`;
+}
 
 const dealIcons = {
   hotel: Hotel,
@@ -384,8 +395,24 @@ export function TripPlanView({
                         {formatCurrency(deal.price)}
                       </strong>
                     </div>
+                    <div className="mt-4 pt-3 border-t border-gray-100">
+                      <Button
+                        asChild
+                        size="sm"
+                        className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5"
+                      >
+                        <a
+                          href={getTravelpayoutsUrl(deal.type, deal.location || trip.destination)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Book with Provider <ExternalLink className="size-3.5" />
+                        </a>
+                      </Button>
+                    </div>
                   </div>
                 </div>
+
               );
             })}
           </div>

@@ -54,7 +54,7 @@ export class MockFlightProvider implements FlightProvider {
       refundable: f.cancellation === "Free Cancellation" || f.cancellation === "Partial Refund",
       fetchedAt: new Date().toISOString(),
       isMock: true,
-      deepLink: "#",
+      deepLink: `https://aviasales.tp.st/search?origin=${encodeURIComponent(f.route.split("→")[0].trim())}&destination=${encodeURIComponent(f.route.split("→")[1].trim())}&marker=${process.env.NEXT_PUBLIC_TRAVELPAYOUTS_MARKER || "561821"}`,
     }));
   }
 }
@@ -110,7 +110,7 @@ export class MockHotelProvider implements HotelProvider {
       currency: "INR",
       fetchedAt: new Date().toISOString(),
       isMock: true,
-      deepLink: "#",
+      deepLink: `https://hotellook.tp.st/search?destination=${encodeURIComponent(request.destination || s.location)}&marker=${process.env.NEXT_PUBLIC_TRAVELPAYOUTS_MARKER || "561821"}`,
     }));
   }
 }
@@ -136,7 +136,7 @@ export class MockActivityProvider implements ActivityProvider {
       image: a.image,
       fetchedAt: new Date().toISOString(),
       isMock: true,
-      deepLink: "#",
+      deepLink: `https://getyourguide.tp.st/search?q=${encodeURIComponent(request.destination || a.name)}&marker=${process.env.NEXT_PUBLIC_TRAVELPAYOUTS_MARKER || "561821"}`,
     }));
   }
 }
