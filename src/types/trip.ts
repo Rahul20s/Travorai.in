@@ -1,7 +1,7 @@
 export type TripDayItem = {
   title: string;
   description?: string;
-  type?: "flight" | "stay" | "activity" | "restaurant" | "transport" | "note";
+  type?: "flight" | "train" | "stay" | "activity" | "restaurant" | "transport" | "note";
   time?: string;
   location?: string;
   image?: string;
