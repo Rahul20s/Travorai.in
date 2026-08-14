@@ -3,7 +3,7 @@ import { z } from "zod";
 export const tripDayItemSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
-  type: z.enum(["flight", "stay", "activity", "restaurant", "transport", "note"]).optional(),
+  type: z.enum(["flight", "train", "stay", "activity", "restaurant", "transport", "note"]).optional(),
   time: z.string().optional(),
   location: z.string().optional(),
   image: z.string().url().optional(),

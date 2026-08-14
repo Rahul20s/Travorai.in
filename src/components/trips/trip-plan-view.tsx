@@ -47,6 +47,7 @@ const itemTypeConfig: Record<
   { bg: string; border: string; icon: string; label: string }
 > = {
   flight: { bg: "bg-sky-50", border: "border-sky-100", icon: "✈️", label: "Flight" },
+  train: { bg: "bg-blue-50", border: "border-blue-100", icon: "🚆", label: "Train" },
   stay: { bg: "bg-violet-50", border: "border-violet-100", icon: "🏨", label: "Stay" },
   activity: { bg: "bg-emerald-50", border: "border-emerald-100", icon: "⭐", label: "Activity" },
   restaurant: { bg: "bg-orange-50", border: "border-orange-100", icon: "🍽️", label: "Food" },
