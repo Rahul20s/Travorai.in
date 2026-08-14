@@ -86,10 +86,19 @@ export function AiChatSearch({ variant = "hero" }: AiChatSearchProps) {
   const handleBuildTrip = async (args: any) => {
     setIsBuildingTrip(true);
     try {
+      // The backend /api/trips strictly requires a 'prompt' field.
+      // Synthesize a rich prompt from the gathered tool arguments.
+      const syntheticPrompt = `Plan a ${args.durationDays}-day trip to ${args.destination}${args.budget ? ` with a budget of ${args.budget} INR` : ''}${args.travelers ? ` for ${args.travelers} travelers` : ''}${args.mood ? ` focusing on a ${args.mood} experience` : ''}.`;
+
+      const payload = {
+        ...args,
+        prompt: syntheticPrompt
+      };
+
       const res = await fetch("/api/trips", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(args),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) throw new Error("Failed to generate trip");
