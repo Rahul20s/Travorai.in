@@ -43,24 +43,24 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex flex-col min-h-screen w-full bg-[#F8FAFC]">
-      <header className="sticky top-0 z-10 flex items-center justify-between px-8 py-4 bg-white/80 backdrop-blur-md border-b border-slate-200">
-        <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Home</h1>
-        <div className="flex items-center gap-3">
+      <header className="sticky top-0 z-10 flex items-center justify-between px-4 lg:px-8 py-4 bg-white/80 backdrop-blur-md border-b border-slate-200 gap-4">
+        <h1 className="text-xl lg:text-2xl font-extrabold text-slate-900 tracking-tight shrink-0">Home</h1>
+        <div className="flex items-center gap-3 shrink-0">
           <Link href="#plan-trip">
-            <Button className="rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 shadow-md shadow-blue-500/20">
-              <Plus className="w-4 h-4 mr-2" />
-              Create a trip
+            <Button className="rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 lg:px-6 shadow-md shadow-blue-500/20 text-sm h-9 lg:h-10">
+              <Plus className="w-4 h-4 lg:mr-2" />
+              <span className="hidden sm:inline">Create a trip</span>
             </Button>
           </Link>
         </div>
       </header>
 
       <main className="flex-1 overflow-y-auto pb-24">
-        <div className="max-w-5xl mx-auto w-full px-8 pt-8 space-y-12">
+        <div className="max-w-5xl mx-auto w-full px-4 lg:px-8 pt-8 space-y-12">
           
           <div className="space-y-2">
-            <h2 className="text-3xl font-extrabold text-slate-900">Good morning, {user.name || "Traveller"}</h2>
-            <p className="text-slate-500 text-lg font-medium">Where are you going next?</p>
+            <h2 className="text-2xl lg:text-3xl font-extrabold text-slate-900">Good morning, {user.name || "Traveller"}</h2>
+            <p className="text-slate-500 text-base lg:text-lg font-medium">Where are you going next?</p>
           </div>
 
           <section id="plan-trip" className="scroll-mt-24">
@@ -194,38 +194,48 @@ export default async function DashboardPage() {
             )}
           </section>
 
-          {/* INSPIRATION */}
-          {!upcomingTrip && !planningTrip && recentTrips.length === 0 && (
-             <section>
-              <h3 className="text-xl font-extrabold text-slate-900 mb-6">Travel Inspiration</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {[
-                  { title: "Boutique Stays in Goa", location: "Goa India", tags: "Hotels" },
-                  { title: "Kerala Backwaters", location: "Kerala India", tags: "Experiences" },
-                  { title: "Hidden Cafes of Paris", location: "Paris France cafe", tags: "Food" }
-                ].map((item, i) => (
-                  <div key={i} className="relative aspect-[4/3] rounded-2xl overflow-hidden group cursor-pointer border border-slate-100">
+          {/* EXPLORE DESTINATIONS (SEO Internal Linking) */}
+          <section className="pt-8 border-t border-slate-200">
+            <h3 className="text-2xl font-extrabold text-slate-900 mb-6">Explore Destinations</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {[
+                { slug: "goa", title: "Goa", context: "Goa India beach sunset", tags: "Beaches & Nightlife" },
+                { slug: "dubai", title: "Dubai", context: "Dubai Burj Khalifa skyline", tags: "Luxury & Shopping" },
+                { slug: "bali", title: "Bali", context: "Bali Indonesia rice terraces temple", tags: "Tropical Paradise" },
+                { slug: "kashmir", title: "Kashmir", context: "Kashmir Dal Lake shikara", tags: "Mountains & Lakes" },
+                { slug: "paris", title: "Paris", context: "Paris France Eiffel Tower", tags: "Culture & Romance" },
+                { slug: "switzerland", title: "Switzerland", context: "Switzerland Alps train", tags: "Alpine Beauty" }
+              ].map((item, i) => (
+                <Link key={i} href={`/destinations/${item.slug}`}>
+                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden group cursor-pointer border border-slate-100 shadow-sm hover:shadow-md transition-all">
                     <SafeImage
                       src=""
-                      context={item.location}
+                      context={item.context}
                       alt={item.title}
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/30 to-transparent" />
                     <div className="absolute bottom-5 left-5 right-5">
-                      <span className="inline-block px-2.5 py-1 text-[10px] font-bold text-white bg-blue-600 rounded-md mb-2">
+                      <span className="inline-block px-2.5 py-1 text-[10px] font-bold text-white bg-blue-600 rounded-md mb-2 shadow-sm">
                         {item.tags}
                       </span>
-                      <h4 className="text-white font-extrabold text-lg leading-tight">
+                      <h4 className="text-white font-extrabold text-xl leading-tight">
                         {item.title}
                       </h4>
                     </div>
                   </div>
-                ))}
-              </div>
-            </section>
-          )}
+                </Link>
+              ))}
+            </div>
+            <div className="mt-8 text-center">
+               <Link href="/destinations/goa">
+                 <Button variant="outline" className="rounded-full font-bold">
+                   View all 10 destinations
+                 </Button>
+               </Link>
+            </div>
+          </section>
         </div>
       </main>
     </div>

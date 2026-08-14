@@ -3,68 +3,71 @@
 import React, { useState } from "react";
 import { destinations } from "@/data/destinations";
 import { DestinationCard } from "./DestinationCard";
-import { ArrowRight } from "lucide-react";
+import { Trees, Music, UtensilsCrossed, MountainSnow, Landmark } from "lucide-react";
 
-const vibes = [
-  { id: "beach", label: "🏖️ Beach Escapes", tag: "relax" },
-  { id: "romantic", label: "💖 Romantic Trips", tag: "couple" },
-  { id: "family", label: "👨‍👩‍👧‍👦 Family Fun", tag: "family" },
-  { id: "solo", label: "🎒 Solo Travel", tag: "solo" },
-  { id: "adventure", label: "🧗 Adventure Quest", tag: "adventure" },
-  { id: "luxury", label: "👑 Luxury Hideaways", tag: "luxury" },
-  { id: "budget", label: "💰 Budget Getaways", tag: "budget" },
+const VIBES = [
+  { id: "nature", label: "Nature & Beaches", icon: Trees },
+  { id: "nightlife", label: "Nightlife", icon: Music },
+  { id: "culture", label: "Culture & History", icon: Landmark },
+  { id: "mountains", label: "Mountains", icon: MountainSnow },
 ];
 
 export function VibeExplorer() {
-  const [activeVibe, setActiveVibe] = useState(vibes[0]);
+  const [activeVibeId, setActiveVibeId] = useState(VIBES[0].id);
 
-  // Filter destinations by tag
-  const filtered = destinations
-    .filter((d) => d.tags.includes(activeVibe.tag))
-    .slice(0, 4);
+  // Simple static mapping for the new SEO destination layer
+  const vibeMap: Record<string, string[]> = {
+    nature: ["Goa", "Bali", "Maldives", "Kerala"],
+    nightlife: ["Goa", "Dubai", "Singapore"],
+    culture: ["Paris", "Bali", "Singapore"],
+    mountains: ["Manali", "Kashmir", "Switzerland"],
+  };
+
+  const activeNames = vibeMap[activeVibeId] || [];
+  const filtered = destinations.filter(d => activeNames.includes(d.name)).slice(0, 4);
 
   return (
-    <section className="py-16 bg-slate-50/50">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10">
-          <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 block mb-2">
-              Tailored Discovery
-            </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
-              Find your kind of trip
+    <section className="py-24 bg-slate-50 relative overflow-hidden">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
+          <div className="max-w-2xl">
+            <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
+              Explore by Vibe
             </h2>
+            <p className="text-lg text-slate-500 font-medium">
+              Not sure where to go? Choose your mood and let us inspire you.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {VIBES.map((vibe) => (
+              <button
+                key={vibe.id}
+                onClick={() => setActiveVibeId(vibe.id)}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
+                  activeVibeId === vibe.id
+                    ? "bg-slate-900 text-white shadow-lg shadow-slate-900/20 scale-105"
+                    : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 hover:border-slate-300"
+                }`}
+              >
+                <vibe.icon className="w-4 h-4" />
+                {vibe.label}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Vibe Selection Tabs */}
-        <div className="flex overflow-x-auto pb-4 scrollbar-none gap-2 mb-10">
-          {vibes.map((v) => (
-            <button
-              key={v.id}
-              onClick={() => setActiveVibe(v)}
-              className={`shrink-0 px-5 py-3 rounded-full text-sm font-bold transition-all duration-300 ${
-                activeVibe.id === v.id
-                  ? "bg-slate-900 text-white shadow-lg shadow-slate-900/20"
-                  : "bg-slate-50 text-slate-600 border border-slate-100 hover:bg-slate-100"
-              }`}
-            >
-              {v.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Filtered Destination Grid */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {filtered.map((dest, i) => (
+          {filtered.map((dest) => (
             <DestinationCard
               key={dest.name}
               name={dest.name}
               country={dest.country}
-              meta={dest.meta}
-              image={dest.image}
-              duration={dest.bestMonths[0] + " recommended"}
-              budget={dest.budgetHint.split(" for ")[0]}
+              meta={dest.quickInfo.bestTime.split(' ')[0]}
+              imageContext={dest.heroImageContext}
+              duration={dest.quickInfo.idealDuration.split(' ')[0] + " Days"}
+              budget={dest.quickInfo.approxBudget.split(' ')[0]}
+              featured={false}
             />
           ))}
         </div>

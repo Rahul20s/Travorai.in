@@ -9,7 +9,7 @@ interface DestinationCardProps {
   name: string;
   country: string;
   meta: string;
-  image: string;
+  imageContext: string;
   duration?: string;
   budget?: string;
   featured?: boolean;
@@ -19,21 +19,22 @@ export function DestinationCard({
   name,
   country,
   meta,
-  image,
+  imageContext,
   duration,
   budget,
   featured = false,
 }: DestinationCardProps) {
   return (
     <Link
-      href={`/dashboard?prompt=Plan a trip to ${name}`}
+      href={`/destinations/${name.toLowerCase()}`}
       className={`group relative block overflow-hidden rounded-3xl bg-slate-900 shadow-sm hover:shadow-xl transition-all duration-500 ${
         featured ? "md:col-span-2 md:row-span-2 aspect-[4/3] md:aspect-auto" : "aspect-[4/5]"
       }`}
     >
       {/* Background Image */}
       <SafeImage
-        src={image}
+        src=""
+        context={imageContext}
         alt={`${name}, ${country}`}
         fill
         className="object-cover transition-transform duration-700 group-hover:scale-105"

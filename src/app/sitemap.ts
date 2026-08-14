@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { destinations } from '@/data/destinations';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://travorai.in';
@@ -13,9 +14,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   );
 
-  // We are not exposing dynamic trip URLs to the sitemap because they are generally private or short-lived,
-  // and we don't want AI-generated content arbitrarily indexed unless it's a curated destination page.
-  // In the future, we can add static /destinations/[slug] pages here.
+  // Programmatic SEO Destination Pages
+  const destinationRoutes = destinations.map((dest) => ({
+    url: `${baseUrl}/destinations/${dest.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.9,
+  }));
 
-  return routes;
+  return [...routes, ...destinationRoutes];
 }

@@ -230,15 +230,15 @@ export function AiChatSearch({ variant = "hero" }: AiChatSearchProps) {
   return (
     <div 
       className={`w-full flex flex-col lg:flex-row transition-all duration-500 ease-in-out ${
-        tripPlan ? "h-[85vh] min-h-[700px]" : "h-auto"
+        tripPlan ? "lg:h-[85vh] lg:min-h-[700px] h-[calc(100vh-134px)]" : "h-auto"
       }`}
     >
       {/* Left Panel: Chat Interface */}
       <div 
-        className={`flex flex-col h-full bg-white transition-all duration-500 ease-in-out shrink-0 ${
+        className={`flex flex-col bg-white transition-all duration-500 ease-in-out shrink-0 ${
           tripPlan 
-            ? "w-full lg:w-[400px] xl:w-[450px] border-b lg:border-b-0 lg:border-r border-slate-200" 
-            : "w-full"
+            ? "w-full lg:w-[400px] xl:w-[450px] h-[40vh] lg:h-full border-b lg:border-b-0 lg:border-r border-slate-200" 
+            : "w-full h-full"
         }`}
       >
         <div ref={chatScrollRef} className={`flex-1 overflow-y-auto p-4 md:p-6 space-y-6 ${!tripPlan ? "max-h-[60vh]" : ""}`}>
