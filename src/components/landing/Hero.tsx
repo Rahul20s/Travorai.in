@@ -73,39 +73,41 @@ export function Hero() {
         </p>
 
         {/* AI Travel Planner input box */}
-        <form onSubmit={handleSubmit} className="w-full max-w-2xl group relative mb-6">
-          <div className="relative bg-white rounded-3xl border border-slate-100 shadow-2xl p-2.5 pl-5 transition-all duration-300 focus-within:border-blue-300 flex items-end gap-3">
+        <form onSubmit={handleSubmit} className="w-full max-w-3xl group relative mb-8">
+          <div className="relative bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-2 pl-6 transition-all duration-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-600/20 focus-within:border-blue-600 flex items-end gap-3">
             <textarea
               ref={textareaRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Try: '5 days in Goa under ₹20K with beaches and nightlife'..."
-              className="flex-1 max-h-[150px] min-h-[44px] py-3.5 resize-none bg-transparent outline-none text-slate-800 text-sm md:text-base placeholder:text-slate-400"
+              placeholder="e.g. '5 days in Goa under ₹20K with beaches and nightlife'..."
+              className="flex-1 max-h-[150px] min-h-[48px] py-3 resize-none bg-transparent outline-none text-slate-900 text-base md:text-lg font-medium placeholder:text-slate-400 placeholder:font-normal"
               rows={1}
             />
             <button
               type="submit"
               disabled={!input.trim()}
-              className="mb-1 p-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all flex-shrink-0"
+              className="mb-1 h-12 px-6 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center shrink-0 shadow-md hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600"
             >
-              <Send className="w-5 h-5" />
+              <Sparkles className="w-5 h-5 mr-2 hidden sm:block" />
+              Plan Trip
             </button>
           </div>
         </form>
 
         {/* Suggestion Chips */}
-        <div className="w-full max-w-2xl">
-          <p className="text-xs font-bold text-slate-350 text-slate-350 text-slate-300/80 uppercase tracking-wider mb-3">
-            Popular searches
+        <div className="w-full max-w-3xl">
+          <p className="text-xs font-bold text-white/80 uppercase tracking-widest mb-4">
+            Try asking for
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-2.5">
             {QUICK_PROMPTS.map((prompt, i) => (
               <button
                 key={i}
                 onClick={() => handleSubmit(undefined, prompt.val)}
-                className="px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 text-xs font-semibold text-white transition-all hover:-translate-y-0.5"
+                className="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-sm font-semibold text-white transition-all hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white flex items-center gap-2"
               >
+                <Sparkles className="w-3.5 h-3.5 text-blue-300" />
                 {prompt.text}
               </button>
             ))}

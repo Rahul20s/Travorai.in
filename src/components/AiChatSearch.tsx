@@ -160,15 +160,28 @@ export function AiChatSearch({ variant = "hero" }: AiChatSearchProps) {
       {variant === "full" && (
         <div className="flex-1 overflow-y-auto p-4 space-y-6">
           {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center space-y-4 text-muted-foreground">
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                <MapPin className="w-8 h-8 text-primary" />
+            <div className="h-full flex flex-col items-center justify-center text-center space-y-6 text-slate-500 py-8">
+              <div className="w-20 h-20 rounded-full bg-blue-50 flex items-center justify-center shadow-inner">
+                <MapPin className="w-10 h-10 text-blue-600" />
               </div>
-              <div>
-                <h3 className="text-xl font-medium text-foreground mb-2">Where do you want to go?</h3>
-                <p className="max-w-md mx-auto">
-                  Tell me your destination, budget, travel dates, and what kind of experience you're looking for.
+              <div className="max-w-md">
+                <h3 className="text-2xl font-bold text-slate-900 mb-3">Where to today?</h3>
+                <p className="text-slate-500 mb-8 leading-relaxed">
+                  I'm your AI travel planner. Give me a few details, and I'll craft a complete, personalized itinerary for you.
                 </p>
+                <div className="grid grid-cols-2 gap-3 text-left">
+                  {[
+                    { label: "Where", placeholder: "e.g., Tokyo, Japan" },
+                    { label: "When", placeholder: "e.g., Next month for 5 days" },
+                    { label: "Who", placeholder: "e.g., Couple, Family of 4" },
+                    { label: "Budget", placeholder: "e.g., Medium budget, Luxury" },
+                  ].map((field, i) => (
+                    <div key={i} className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                      <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-1">{field.label}</span>
+                      <span className="text-sm font-medium text-slate-700">{field.placeholder}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           ) : (
@@ -179,27 +192,33 @@ export function AiChatSearch({ variant = "hero" }: AiChatSearchProps) {
                   className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[80%] rounded-2xl px-5 py-3 shadow-sm ${
+                    className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-5 py-4 ${
                       msg.role === "user"
-                        ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white"
-                        : "bg-white border border-gray-200 text-gray-800"
+                        ? "bg-slate-900 text-white rounded-tr-sm shadow-md"
+                        : "bg-white border border-slate-200 text-slate-800 rounded-tl-sm shadow-sm"
                     }`}
                   >
                     {msg.role === "assistant" && (
-                      <div className="flex items-center gap-2 mb-2 text-primary font-medium">
+                      <div className="flex items-center gap-2 mb-3 text-blue-600 font-bold text-sm tracking-wide uppercase">
                         <Sparkles className="w-4 h-4" />
                         Travora AI
                       </div>
                     )}
-                    <p className="whitespace-pre-wrap">{msg.content}</p>
+                    <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
                   </div>
                 </div>
               ))}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="bg-white border border-gray-200 rounded-2xl px-5 py-4 shadow-sm flex items-center gap-3">
-                    <Loader2 className="w-5 h-5 animate-spin text-primary" />
-                    <span className="text-gray-500 font-medium">Crafting your perfect trip...</span>
+                  <div className="bg-white border border-slate-200 rounded-2xl rounded-tl-sm px-6 py-5 shadow-sm flex items-center gap-4">
+                    <div className="relative flex items-center justify-center">
+                      <Loader2 className="w-6 h-6 animate-spin text-blue-600 absolute" />
+                      <div className="w-10 h-10 rounded-full bg-blue-50" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-slate-900 font-bold">Crafting your itinerary</span>
+                      <span className="text-slate-500 text-sm animate-pulse">Analyzing flights, hotels, and activities...</span>
+                    </div>
                   </div>
                 </div>
               )}
@@ -234,23 +253,23 @@ export function AiChatSearch({ variant = "hero" }: AiChatSearchProps) {
       )}
 
       {/* Input Area */}
-      <div className={`${variant === "full" ? "p-4 border-t bg-white" : ""}`}>
-        <form onSubmit={handleSubmit} className="relative group">
-          <div className="relative bg-white rounded-2xl shadow-xl shadow-indigo-100/50 border border-gray-100 p-2 pl-4 transition-all focus-within:shadow-2xl focus-within:shadow-indigo-200/50 focus-within:border-indigo-200 flex gap-2 items-end">
+      <div className={`${variant === "full" ? "p-4 border-t border-slate-200 bg-white" : ""}`}>
+        <form onSubmit={handleSubmit} className="relative group max-w-4xl mx-auto w-full">
+          <div className="relative bg-white rounded-2xl shadow-sm border border-slate-200 p-2 pl-5 transition-all duration-300 focus-within:ring-2 focus-within:ring-blue-600 focus-within:border-blue-600 flex gap-3 items-end">
             <textarea
               ref={textareaRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="e.g. 5 days in Paris for a honeymoon, medium budget..."
-              className="flex-1 max-h-[200px] min-h-[44px] py-3 resize-none bg-transparent outline-none text-gray-700 placeholder:text-gray-400"
+              className="flex-1 max-h-[200px] min-h-[44px] py-3 resize-none bg-transparent outline-none text-slate-900 placeholder:text-slate-400 font-medium"
               rows={1}
               disabled={isLoading}
             />
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="mb-1 p-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity flex-shrink-0"
+              className="mb-1 h-12 px-5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center shrink-0 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600"
             >
               {isLoading && variant === "hero" ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -263,13 +282,13 @@ export function AiChatSearch({ variant = "hero" }: AiChatSearchProps) {
 
         {/* Quick Prompts - Only show if empty chat in full variant or hero variant */}
         {(variant === "hero" || (variant === "full" && messages.length === 0)) && (
-          <div className="mt-4 flex gap-2 overflow-x-auto pb-2 scrollbar-hide snap-x">
+          <div className="mt-4 flex gap-2 overflow-x-auto pb-2 scrollbar-hide snap-x max-w-4xl mx-auto w-full">
             {QUICK_PROMPTS.map((prompt, i) => (
               <button
                 key={i}
                 onClick={() => handleSubmit(undefined, prompt)}
                 disabled={isLoading}
-                className="snap-start flex-shrink-0 px-4 py-2 rounded-full bg-white/80 backdrop-blur border border-white/20 shadow-sm text-sm font-medium text-gray-700 hover:bg-white hover:-translate-y-0.5 transition-all"
+                className="snap-start flex-shrink-0 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
               >
                 {prompt}
               </button>

@@ -107,26 +107,24 @@ export function TripPlanView({
     <div className="w-full space-y-8">
       {/* ── Hero Header ── */}
       {variant === "full" && (
-        <div className="rounded-3xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-8 md:p-10 text-white relative overflow-hidden">
-          {/* Subtle pattern overlay */}
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_30%_40%,white_1px,transparent_1px)] bg-[length:20px_20px]" />
+        <div className="rounded-3xl bg-white border border-slate-200 p-6 md:p-10 relative overflow-hidden shadow-sm">
           <div className="relative z-10">
             <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
               <div>
-                <p className="text-sm font-bold uppercase tracking-widest text-white/70 mb-2">
+                <p className="text-sm font-bold uppercase tracking-widest text-blue-600 mb-2">
                   AI Planner · {trip.bestMonth}
                 </p>
-                <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+                <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
                   {trip.destination} Itinerary
                 </h2>
               </div>
               <Button
                 onClick={handleSave}
                 disabled={saving || saved}
-                className={`rounded-full px-6 h-12 text-base font-bold shadow-lg transition ${
+                className={`rounded-xl px-6 h-12 text-base font-bold shadow-sm transition-all focus-visible:ring-2 focus-visible:ring-blue-600 ${
                   saved
-                    ? "bg-green-500 hover:bg-green-600 text-white"
-                    : "bg-white text-indigo-600 hover:bg-gray-100"
+                    ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200"
+                    : "bg-slate-900 text-white hover:bg-slate-800 hover:-translate-y-0.5 hover:shadow-md"
                 }`}
               >
                 {saving ? (
@@ -136,13 +134,13 @@ export function TripPlanView({
                 ) : (
                   <Save className="size-5 mr-2" />
                 )}
-                {saved ? "Saved!" : "Save trip"}
+                {saved ? "Saved to Profile" : "Save trip"}
               </Button>
             </div>
 
             {/* Summary */}
             {trip.summary && (
-              <p className="text-white/85 text-base leading-relaxed max-w-3xl mb-8">
+              <p className="text-slate-600 text-base md:text-lg leading-relaxed max-w-3xl mb-8 font-medium">
                 {trip.summary}
               </p>
             )}
@@ -157,9 +155,9 @@ export function TripPlanView({
               ].map((badge) => (
                 <div
                   key={badge.label}
-                  className="flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-semibold"
+                  className="flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-lg px-4 py-2.5 text-sm font-bold text-slate-700"
                 >
-                  <badge.icon className="size-4" />
+                  <badge.icon className="size-4 text-slate-400" />
                   {badge.label}
                 </div>
               ))}
@@ -170,27 +168,27 @@ export function TripPlanView({
 
       {/* ── Budget Breakdown ── */}
       {variant === "full" && trip.budgetBreakdown && trip.budgetBreakdown.length > 0 && (
-        <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-          <div className="flex items-center gap-2 mb-5">
-            <CircleDollarSign className="size-5 text-indigo-500" />
-            <h3 className="text-lg font-bold text-gray-900">Budget breakdown</h3>
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="flex items-center gap-2 mb-6">
+            <CircleDollarSign className="size-5 text-blue-600" />
+            <h3 className="text-lg font-extrabold text-slate-900">Budget breakdown</h3>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {trip.budgetBreakdown.map((item) => (
-              <div key={item.category} className="p-4 rounded-xl bg-gray-50">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-gray-600">{item.category}</span>
-                  <strong className="text-sm font-bold text-gray-900">
+              <div key={item.category} className="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm font-bold text-slate-700">{item.category}</span>
+                  <strong className="text-sm font-extrabold text-slate-900">
                     {formatCurrency(item.amount)}
                   </strong>
                 </div>
-                <div className="h-2 overflow-hidden rounded-full bg-gray-200">
+                <div className="h-2.5 overflow-hidden rounded-full bg-slate-200">
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500"
+                    className="h-full rounded-full bg-blue-500 transition-all duration-500"
                     style={{ width: `${item.percentage}%` }}
                   />
                 </div>
-                <p className="text-xs text-gray-400 mt-1">{item.percentage}% of total</p>
+                <p className="text-xs font-semibold text-slate-400 mt-2">{item.percentage}% of total</p>
               </div>
             ))}
           </div>
@@ -199,15 +197,15 @@ export function TripPlanView({
 
       {/* ── Day Selector Tabs ── */}
       {trip.days.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-2">
+        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
           {trip.days.map((day) => (
             <button
               key={day.day}
               onClick={() => setActiveDay(day.day)}
-              className={`shrink-0 rounded-full px-6 py-3 text-sm font-bold transition-all ${
+              className={`shrink-0 rounded-xl px-6 h-11 text-sm font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 flex items-center justify-center ${
                 activeDay === day.day
-                  ? "bg-gray-900 text-white shadow-lg"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  ? "bg-slate-900 text-white shadow-md"
+                  : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900"
               }`}
             >
               Day {day.day}
@@ -218,17 +216,17 @@ export function TripPlanView({
 
       {/* ── Active Day Content ── */}
       {activeDayData && (
-        <div className="space-y-4">
+        <div className="space-y-5">
           {/* Day header */}
-          <div className="flex items-center gap-4 mb-2">
-            <div className="grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-gray-900 to-gray-700 text-lg font-black text-white shadow-md">
+          <div className="flex items-center gap-4 mb-3">
+            <div className="grid size-14 place-items-center rounded-2xl bg-slate-900 text-lg font-black text-white shadow-sm">
               {activeDayData.day}
             </div>
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                 Day {activeDayData.day}
               </p>
-              <h3 className="text-xl font-extrabold text-gray-900">
+              <h3 className="text-xl md:text-2xl font-extrabold text-slate-900">
                 {activeDayData.title}
               </h3>
             </div>
@@ -249,11 +247,11 @@ export function TripPlanView({
               return (
                 <div
                   key={idx}
-                  className={`flex gap-5 rounded-2xl border ${config.border} bg-white p-5 transition-shadow hover:shadow-md`}
+                  className={`flex flex-col sm:flex-row gap-4 sm:gap-5 rounded-2xl border ${config.border} bg-white p-4 sm:p-5 transition-shadow hover:shadow-md`}
                 >
                   {/* Large image / icon area */}
                   {item.image ? (
-                    <div className="relative size-24 shrink-0 overflow-hidden rounded-xl">
+                    <div className="relative h-40 sm:h-28 w-full sm:w-28 shrink-0 overflow-hidden rounded-xl">
                       <SafeImage
                         alt={item.title}
                         src={item.image}
@@ -264,49 +262,49 @@ export function TripPlanView({
                     </div>
                   ) : (
                     <div
-                      className={`grid size-24 shrink-0 place-items-center rounded-xl ${config.bg}`}
+                      className={`grid h-40 sm:h-28 w-full sm:w-28 shrink-0 place-items-center rounded-xl ${config.bg}`}
                     >
                       <span className="text-4xl">{config.icon}</span>
                     </div>
                   )}
 
                   {/* Content */}
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 flex flex-col justify-center">
                     <div className="flex items-start justify-between gap-3 mb-2">
                       <div>
                         <span
-                          className={`inline-block text-xs font-bold uppercase tracking-wider ${
+                          className={`inline-block text-[10px] font-bold uppercase tracking-wider ${
                             config.bg
-                          } px-2.5 py-1 rounded-full mb-2`}
+                          } px-2 py-0.5 rounded text-slate-700 mb-1.5`}
                         >
                           {config.label}
                         </span>
-                        <h4 className="text-lg font-bold text-gray-900">
+                        <h4 className="text-lg font-bold text-slate-900 leading-tight">
                           {item.title}
                         </h4>
                       </div>
                       {price && (
-                        <span className="shrink-0 text-base font-extrabold text-gray-900 bg-gray-50 px-3 py-1.5 rounded-full">
+                        <span className="shrink-0 text-sm font-extrabold text-slate-900 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-md">
                           {price}
                         </span>
                       )}
                     </div>
 
                     {item.description && (
-                      <p className="text-gray-600 text-sm leading-relaxed mb-3">
+                      <p className="text-slate-600 text-sm leading-relaxed mb-4">
                         {item.description}
                       </p>
                     )}
 
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap gap-2 mt-auto">
                       {item.time && (
-                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full">
-                          <Clock className="size-3.5" /> {item.time}
+                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-md">
+                          <Clock className="size-3.5 text-slate-400" /> {item.time}
                         </span>
                       )}
                       {item.location && (
-                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full">
-                          <MapPin className="size-3.5" /> {item.location}
+                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-md">
+                          <MapPin className="size-3.5 text-slate-400" /> {item.location}
                         </span>
                       )}
                     </div>
@@ -321,12 +319,12 @@ export function TripPlanView({
               (activeDayData.items ?? []).map((item, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center gap-5 rounded-2xl border border-gray-100 bg-white p-5 hover:shadow-md transition"
+                  className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 hover:shadow-md transition-shadow"
                 >
-                  <div className="grid size-16 shrink-0 place-items-center rounded-xl bg-emerald-50">
-                    <span className="text-3xl">⭐</span>
+                  <div className="grid size-12 shrink-0 place-items-center rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="text-xl">⭐</span>
                   </div>
-                  <span className="text-base font-semibold text-gray-800">
+                  <span className="text-sm font-semibold text-slate-800 leading-snug">
                     {item}
                   </span>
                 </div>
@@ -337,81 +335,81 @@ export function TripPlanView({
 
       {/* ── Deals / Best Options — Horizontal scroll ── */}
       {variant === "full" && trip.deals && trip.deals.length > 0 && (
-        <div className="space-y-4 pt-4">
+        <div className="space-y-5 pt-6 border-t border-slate-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-indigo-500">
-                Compare
+              <p className="text-xs font-bold uppercase tracking-widest text-blue-600">
+                Book instantly
               </p>
-              <h2 className="text-2xl font-extrabold text-gray-900 mt-1">
-                Best options
+              <h2 className="text-2xl font-extrabold text-slate-900 mt-1">
+                Top Provider Deals
               </h2>
             </div>
-            <ChevronRight className="size-5 text-gray-400" />
+            <ChevronRight className="size-6 text-slate-300" />
           </div>
 
-          <div className="flex gap-5 overflow-x-auto pb-4">
+          <div className="flex gap-5 overflow-x-auto pb-6 scrollbar-hide snap-x">
             {trip.deals.map((deal) => {
               const Icon = dealIcons[deal.type];
               return (
                 <div
                   key={deal.title}
-                  className="flex-none w-[320px] rounded-2xl border border-gray-100 bg-white overflow-hidden hover:shadow-lg transition-shadow"
+                  className="snap-start flex-none w-[300px] md:w-[340px] flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
                 >
-                  <div className="relative h-44">
+                  <div className="relative h-48 overflow-hidden">
                     <SafeImage
                       alt={deal.title}
                       src={deal.image}
                       fill
-                      className="object-cover"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
                       context={`${deal.location || ""} ${deal.type || ""} ${deal.description || ""} ${trip.destination}`}
                     />
-                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur rounded-full px-3 py-1 text-xs font-bold uppercase flex items-center gap-1">
+                    <div className="absolute top-3 left-3 bg-slate-900/90 backdrop-blur-md rounded-lg px-3 py-1.5 text-xs font-bold uppercase text-white flex items-center gap-1.5 shadow-sm">
                       <Icon className="size-3.5" />
                       {deal.type}
                     </div>
                   </div>
-                  <div className="p-5">
-                    <h3 className="text-lg font-bold text-gray-900 mb-1">
+                  <div className="p-5 flex flex-col flex-1">
+                    <h3 className="text-lg font-extrabold text-slate-900 mb-2 leading-tight">
                       {deal.title}
                     </h3>
-                    <p className="text-sm text-gray-500 leading-relaxed mb-3 line-clamp-2">
+                    <p className="text-sm text-slate-500 leading-relaxed mb-4 line-clamp-2">
                       {deal.description}
                     </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-between mb-5 mt-auto">
+                      <div className="flex flex-col gap-1">
                         {deal.rating !== undefined && (
-                          <span className="flex items-center gap-1 text-sm font-semibold text-amber-600">
+                          <span className="flex items-center gap-1 text-sm font-bold text-slate-700">
                             <Star className="size-4 fill-amber-400 text-amber-400" />
-                            {deal.rating}
+                            {deal.rating} / 5
                           </span>
                         )}
                         {deal.location && (
-                          <span className="flex items-center gap-1 text-xs text-gray-400">
+                          <span className="flex items-center gap-1 text-xs font-medium text-slate-500">
                             <MapPin className="size-3" /> {deal.location}
                           </span>
                         )}
                       </div>
-                      <strong className="text-lg font-extrabold text-gray-900">
-                        {formatCurrency(deal.price)}
-                      </strong>
+                      <div className="text-right">
+                        <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Est. Total</span>
+                        <strong className="text-xl font-black text-blue-600">
+                          {formatCurrency(deal.price)}
+                        </strong>
+                      </div>
                     </div>
-                    <div className="mt-4 pt-3 border-t border-gray-100">
-                      <Button
-                        onClick={() => {
-                          trackAffiliateClick(
-                            "Travelpayouts",
-                            deal.location || trip.destination,
-                            deal.type
-                          );
-                          window.open(getTravelpayoutsUrl(deal.type, deal.location || trip.destination), "_blank", "noopener,noreferrer");
-                        }}
-                        size="sm"
-                        className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5"
-                      >
-                        Book with Provider <ExternalLink className="size-3.5" />
-                      </Button>
-                    </div>
+                    <Button
+                      onClick={() => {
+                        trackAffiliateClick(
+                          "Travelpayouts",
+                          deal.location || trip.destination,
+                          deal.type
+                        );
+                        window.open(getTravelpayoutsUrl(deal.type, deal.location || trip.destination), "_blank", "noopener,noreferrer");
+                      }}
+                      className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600 transition-all"
+                    >
+                      Book with Provider <ExternalLink className="size-4" />
+                    </Button>
                   </div>
                 </div>
 
