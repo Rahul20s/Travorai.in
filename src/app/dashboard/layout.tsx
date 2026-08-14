@@ -12,6 +12,15 @@ import {
   Home,
   MessageSquare
 } from "lucide-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard | Travora",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default function DashboardLayout({
   children,

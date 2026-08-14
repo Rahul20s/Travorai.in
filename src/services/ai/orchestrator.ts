@@ -5,6 +5,7 @@ import { starterTrip } from "@/features/trips/planner/mock-trip";
 import { tripPlanSchema } from "@/services/ai/schemas";
 import type { TripPlanningInput, TripRefiningInput } from "@/services/ai/types";
 import type { TripPlan } from "@/types/trip";
+import { geocodeLocation } from "@/lib/travel/providers/nominatim";
 
 function getModel() {
   // Prefer Azure OpenAI when configured (used by Travora)
@@ -98,6 +99,25 @@ export async function planTrip(input: TripPlanningInput): Promise<TripPlan> {
       system: buildSystemPrompt(input),
       prompt: input.prompt
     });
+
+    // Hydrate coordinates for items using Nominatim
+    // We only process up to 5 items to avoid making the user wait too long (Nominatim is 1 req/sec)
+    let geocodedCount = 0;
+    for (const day of object.days) {
+      if (day.structuredItems) {
+        for (const item of day.structuredItems) {
+          if (geocodedCount >= 5) break;
+          // Use location if available, otherwise title + destination
+          const query = item.location ? `${item.location}, ${object.destination}` : `${item.title}, ${object.destination}`;
+          const coords = await geocodeLocation(query);
+          if (coords) {
+            item.latitude = coords.lat;
+            item.longitude = coords.lon;
+            geocodedCount++;
+          }
+        }
+      }
+    }
 
     return object;
   } catch (error) {

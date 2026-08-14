@@ -5,6 +5,7 @@ import { Send, MapPin, Sparkles, Loader2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TripPlanView } from "@/components/trips/trip-plan-view";
 import { TripPlan } from "@/types/trip";
+import { trackSearchEvent, trackTripCreation } from "@/lib/analytics/events";
 
 interface AiChatSearchProps {
   variant?: "hero" | "full";
@@ -88,6 +89,7 @@ export function AiChatSearch({ variant = "hero" }: AiChatSearchProps) {
     }
 
     setIsLoading(true);
+    trackSearchEvent(promptText);
 
     try {
       // If we have an existing trip and this is a refine request, send as refinement
@@ -112,6 +114,12 @@ export function AiChatSearch({ variant = "hero" }: AiChatSearchProps) {
       } else {
         // Full variant logic
         setTripPlan(data.trip as TripPlan);
+        trackTripCreation(
+          data.trip.destination,
+          data.trip.durationDays,
+          data.trip.budget,
+          false // We could check auth state if we had it here
+        );
         setMessages((prev) => [
           ...prev,
           {

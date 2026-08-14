@@ -7,7 +7,9 @@ export const tripDayItemSchema = z.object({
   time: z.string().optional(),
   location: z.string().optional(),
   image: z.string().url().optional(),
-  price: z.number().int().nonnegative().optional()
+  price: z.number().int().nonnegative().optional(),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
 });
 
 export const tripDaySchema = z.object({

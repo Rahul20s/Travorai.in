@@ -24,6 +24,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 import type { TripPlan, TripDayItem } from "@/types/trip";
+import { trackAffiliateClick } from "@/lib/analytics/events";
 
 function getTravelpayoutsUrl(type: "hotel" | "flight" | "train", destination: string) {
   const marker = process.env.NEXT_PUBLIC_TRAVELPAYOUTS_MARKER || "561821";
@@ -397,17 +398,18 @@ export function TripPlanView({
                     </div>
                     <div className="mt-4 pt-3 border-t border-gray-100">
                       <Button
-                        asChild
+                        onClick={() => {
+                          trackAffiliateClick(
+                            "Travelpayouts",
+                            deal.location || trip.destination,
+                            deal.type
+                          );
+                          window.open(getTravelpayoutsUrl(deal.type, deal.location || trip.destination), "_blank", "noopener,noreferrer");
+                        }}
                         size="sm"
                         className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5"
                       >
-                        <a
-                          href={getTravelpayoutsUrl(deal.type, deal.location || trip.destination)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          Book with Provider <ExternalLink className="size-3.5" />
-                        </a>
+                        Book with Provider <ExternalLink className="size-3.5" />
                       </Button>
                     </div>
                   </div>
