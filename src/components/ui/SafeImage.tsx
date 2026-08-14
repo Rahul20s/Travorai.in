@@ -38,7 +38,7 @@ export function SafeImage({
     : (imgSrc || resolveTravelImage({ alt, src: src as string, ...(typeof context === "string" ? { description: context } : context) }));
 
   return (
-    <div className={cn("relative overflow-hidden bg-slate-100", wrapperClassName)}>
+    <div className={cn("relative overflow-hidden bg-slate-100 w-full h-full", wrapperClassName)}>
       {/* Loading Skeleton */}
       {isLoading && !hasError && (
         <div className="absolute inset-0 z-10 animate-pulse bg-slate-200 flex items-center justify-center">
