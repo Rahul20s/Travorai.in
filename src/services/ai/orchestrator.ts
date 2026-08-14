@@ -2,7 +2,7 @@ import { createAzure } from "@ai-sdk/azure";
 import { openai } from "@ai-sdk/openai";
 import { generateObject } from "ai";
 import { starterTrip } from "@/features/trips/planner/mock-trip";
-import { tripPlanSchema } from "@/services/ai/schemas";
+import { tripPlanSchema, tripRefinementSchema } from "@/services/ai/schemas";
 import type { TripPlanningInput, TripRefiningInput } from "@/services/ai/types";
 import type { TripPlan } from "@/types/trip";
 import { geocodeLocation } from "@/lib/travel/providers/nominatim";
@@ -145,17 +145,25 @@ Deals: ${JSON.stringify(currentTrip.deals)}
 
 The user's instruction is: "${instruction}"
 
-Return an updated, complete trip plan (same schema) that implements the requested change while keeping the structure valuable and realistic. Adjust the budget, day activities, and deals accordingly. Keep INR currency.`;
+IMPORTANT DELTA UPDATE RULES:
+1. ONLY return the top-level fields that need to change to satisfy the user's instruction.
+2. If a field does NOT need to change, OMIT it completely from your JSON response.
+3. If you are updating the 'deals' array, provide the ENTIRE updated 'deals' array.
+4. If you are updating the 'days' array, provide the ENTIRE updated 'days' array.
+5. NEVER return abbreviated or hallucinated data for fields that aren't related to the user's request. Just omit them.`;
 
   try {
     const { object } = await generateObject({
       model,
-      schema: tripPlanSchema,
+      schema: tripRefinementSchema,
       system: refineSystem,
       prompt: instruction
     });
 
-    return object;
+    return {
+      ...currentTrip,
+      ...object
+    } as TripPlan;
   } catch (error) {
     console.error("[ai-orchestrator] refine failed, returning current trip:", error);
     return currentTrip;

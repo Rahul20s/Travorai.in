@@ -46,3 +46,5 @@ export const tripPlanSchema = z.object({
     })
   ).min(1).max(5)
 });
+
+export const tripRefinementSchema = tripPlanSchema.partial();
