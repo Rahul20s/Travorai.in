@@ -7,7 +7,7 @@ import type { TripPlanningInput, TripRefiningInput } from "@/services/ai/types";
 import type { TripPlan } from "@/types/trip";
 import { geocodeLocation } from "@/lib/travel/providers/nominatim";
 
-function getModel() {
+export function getModel() {
   // Prefer Azure OpenAI when configured (used by Travora)
   if (
     process.env.AZURE_OPENAI_API_KEY &&
