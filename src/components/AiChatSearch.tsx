@@ -234,18 +234,18 @@ export function AiChatSearch({ variant = "hero" }: AiChatSearchProps) {
         className={`flex flex-col bg-white transition-all duration-500 ease-in-out shrink-0 w-full ${
           tripPlan 
             ? "h-[50vh] border-b border-slate-200" 
-            : "h-auto max-h-[60vh]"
+            : "h-auto"
         }`}
       >
-        <div ref={chatScrollRef} className={`flex-1 overflow-y-auto p-4 md:p-6 space-y-6 ${!tripPlan ? "max-h-[60vh]" : ""}`}>
+        <div ref={chatScrollRef} className={`flex-1 overflow-y-auto p-4 md:p-6 space-y-6 ${!tripPlan && messages.length > 0 ? "max-h-[60vh]" : ""}`}>
           {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center space-y-6 text-slate-500 py-12">
-              <div className="w-20 h-20 rounded-full bg-blue-50 flex items-center justify-center shadow-inner">
-                <MapPin className="w-10 h-10 text-blue-600" />
+            <div className="flex flex-col items-center justify-center text-center space-y-4 text-slate-500 py-6 md:py-8">
+              <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center shadow-inner">
+                <MapPin className="w-8 h-8 text-blue-600" />
               </div>
               <div className="max-w-md">
-                <h3 className="text-2xl font-extrabold text-slate-900 mb-3">Where to?</h3>
-                <p className="text-base text-slate-500 font-medium">
+                <h3 className="text-xl md:text-2xl font-extrabold text-slate-900 mb-2">Where to?</h3>
+                <p className="text-sm md:text-base text-slate-500 font-medium">
                   Tell me your destination, travel dates, who you're traveling with, and any budget preferences. I'll build a perfect itinerary.
                 </p>
               </div>
@@ -347,7 +347,7 @@ export function AiChatSearch({ variant = "hero" }: AiChatSearchProps) {
 
           {/* Quick Prompts (only when empty) */}
           {messages.length === 0 && (
-            <div className="mt-4 flex gap-2 overflow-x-auto pb-2 scrollbar-hide snap-x w-full">
+            <div className="mt-4 flex gap-2 overflow-x-auto pb-2 snap-x w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               {QUICK_PROMPTS.map((prompt, i) => (
                 <button
                   key={i}
