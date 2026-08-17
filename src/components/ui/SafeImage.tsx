@@ -7,7 +7,8 @@ import { Image as ImageIcon } from "lucide-react";
 
 import { resolveTravelImage, type TravelImageContext } from "@/lib/images/travelImageResolver";
 
-interface SafeImageProps extends Omit<ImageProps, "onError" | "onLoad"> {
+interface SafeImageProps extends Omit<ImageProps, "onError" | "onLoad" | "src"> {
+  src?: string | null;
   fallbackSrc?: string;
   wrapperClassName?: string;
   context?: string | TravelImageContext;
@@ -22,46 +23,61 @@ export function SafeImage({
   context = "",
   ...props
 }: SafeImageProps) {
-  const [imgSrc, setImgSrc] = useState<string>("");
+  const [errorCount, setErrorCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     // Reset states when src changes
-    setImgSrc(src as string);
+    setErrorCount(0);
     setIsLoading(true);
-    setHasError(false);
   }, [src]);
 
-  const activeSrc = hasError 
-    ? (fallbackSrc || resolveTravelImage({ alt, src: src as string, ...(typeof context === "string" ? { description: context } : context) }))
-    : (imgSrc || resolveTravelImage({ alt, src: src as string, ...(typeof context === "string" ? { description: context } : context) }));
+  const resolvedContext = typeof context === "string" ? { description: context } : context;
+  
+  let activeSrc = "";
+  if (errorCount === 0) {
+    activeSrc = src || resolveTravelImage({ alt, src: src as string, ...resolvedContext });
+  } else if (errorCount === 1 && fallbackSrc) {
+    activeSrc = fallbackSrc;
+  }
+
+  const isBroken = errorCount > (fallbackSrc ? 1 : 0) || !activeSrc;
 
   return (
-    <div className={cn("relative overflow-hidden bg-slate-100 w-full h-full", wrapperClassName)}>
+    <div className={cn("relative overflow-hidden bg-slate-100 w-full h-full flex items-center justify-center", wrapperClassName)}>
       {/* Loading Skeleton */}
-      {isLoading && !hasError && (
+      {isLoading && !isBroken && (
         <div className="absolute inset-0 z-10 animate-pulse bg-slate-200 flex items-center justify-center">
           <ImageIcon className="w-8 h-8 text-slate-400 animate-bounce" />
         </div>
       )}
 
+      {/* Broken Placeholder */}
+      {isBroken && (
+        <div className="absolute inset-0 z-10 bg-slate-100 flex flex-col items-center justify-center text-slate-400 p-4 text-center">
+          <ImageIcon className="w-8 h-8 mb-2 opacity-50" />
+          <span className="text-[10px] font-semibold uppercase tracking-wider opacity-70 line-clamp-2">{alt}</span>
+        </div>
+      )}
+
       {/* Image Rendering */}
-      <Image
-        src={activeSrc}
-        alt={alt}
-        className={cn(
-          "object-cover transition-all duration-500",
-          isLoading ? "scale-105 blur-sm" : "scale-100 blur-0",
-          className
-        )}
-        onLoadingComplete={() => setIsLoading(false)}
-        onError={() => {
-          setHasError(true);
-          setIsLoading(false);
-        }}
-        {...props}
-      />
+      {!isBroken && (
+        <Image
+          src={activeSrc}
+          alt={alt}
+          className={cn(
+            "object-cover transition-all duration-500",
+            isLoading ? "scale-105 blur-sm" : "scale-100 blur-0",
+            className
+          )}
+          onLoadingComplete={() => setIsLoading(false)}
+          onError={() => {
+            setErrorCount((prev) => prev + 1);
+            setIsLoading(false);
+          }}
+          {...props}
+        />
+      )}
     </div>
   );
 }
