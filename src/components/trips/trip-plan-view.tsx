@@ -25,16 +25,7 @@ import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 import type { TripPlan, TripDayItem } from "@/types/trip";
 import { trackAffiliateClick } from "@/lib/analytics/events";
-
-function getTravelpayoutsUrl(type: "hotel" | "flight" | "train", destination: string) {
-  const marker = process.env.NEXT_PUBLIC_TRAVELPAYOUTS_MARKER || "561821";
-  const dest = encodeURIComponent(destination || "India");
-
-  if (type === "hotel") {
-    return `https://hotellook.tp.st/search?destination=${dest}&marker=${marker}`;
-  }
-  return `https://aviasales.tp.st/search?destination=${dest}&marker=${marker}`;
-}
+import { getAffiliateProvider } from "@/lib/monetization/affiliates";
 
 const dealIcons = {
   hotel: Hotel,
@@ -245,6 +236,8 @@ export function TripPlanView({
                   ? "Free"
                   : formatCurrency(item.price);
 
+              const affiliate = getAffiliateProvider(type, trip.destination, item.title);
+
               return (
                 <div
                   key={idx}
@@ -309,6 +302,28 @@ export function TripPlanView({
                         </span>
                       )}
                     </div>
+                    {/* Affiliate Booking Button */}
+                    {affiliate && (
+                      <div className="mt-4 pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-end gap-3">
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            trackAffiliateClick({
+                              provider: affiliate.providerName,
+                              category: type,
+                              destination: trip.destination,
+                              itemTitle: item.title,
+                              linkType: affiliate.linkType
+                            });
+                            window.open(affiliate.url, "_blank", "noopener,noreferrer");
+                          }}
+                          className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold h-10 sm:h-9 px-4 rounded-lg flex items-center justify-center gap-1.5 shadow-sm hover:shadow transition-all"
+                        >
+                          {affiliate.icon} {affiliate.ctaText}
+                          <ExternalLink className="size-3.5 ml-0.5" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               );
@@ -352,6 +367,8 @@ export function TripPlanView({
           <div className="flex gap-5 overflow-x-auto pb-6 scrollbar-hide snap-x">
             {trip.deals.map((deal) => {
               const Icon = dealIcons[deal.type];
+              const affiliate = getAffiliateProvider(deal.type, deal.location || trip.destination, deal.title, trip.origin);
+
               return (
                 <div
                   key={deal.title}
@@ -398,24 +415,34 @@ export function TripPlanView({
                         </strong>
                       </div>
                     </div>
-                    <Button
-                      onClick={() => {
-                        trackAffiliateClick(
-                          "Travelpayouts",
-                          deal.location || trip.destination,
-                          deal.type
-                        );
-                        window.open(getTravelpayoutsUrl(deal.type, deal.location || trip.destination), "_blank", "noopener,noreferrer");
-                      }}
-                      className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600 transition-all"
-                    >
-                      Book with Provider <ExternalLink className="size-4" />
-                    </Button>
+                    {affiliate && (
+                      <Button
+                        onClick={() => {
+                          trackAffiliateClick({
+                            provider: affiliate.providerName,
+                            category: deal.type,
+                            destination: deal.location || trip.destination,
+                            itemTitle: deal.title,
+                            linkType: affiliate.linkType
+                          });
+                          window.open(affiliate.url, "_blank", "noopener,noreferrer");
+                        }}
+                        className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600 transition-all"
+                      >
+                        {affiliate.ctaText}
+                      </Button>
+                    )}
                   </div>
                 </div>
 
               );
             })}
+          </div>
+          
+          <div className="mt-4 text-center">
+            <p className="text-xs text-slate-400">
+              Travora may earn a commission when you book through these links, at no extra cost to you.
+            </p>
           </div>
         </div>
       )}

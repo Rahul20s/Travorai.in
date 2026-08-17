@@ -9,17 +9,21 @@ import { sendGAEvent } from "@next/third-parties/google";
 /**
  * Track when a user clicks on an affiliate booking link
  */
-export function trackAffiliateClick(
-  provider: string,
-  destination: string,
-  category: string,
-  tripId?: string
-) {
+export function trackAffiliateClick(params: {
+  provider: string;
+  category: string;
+  destination: string;
+  itemTitle?: string;
+  linkType?: string;
+  tripId?: string;
+}) {
   sendGAEvent("event", "affiliate_click", {
-    provider_name: provider,
-    destination: destination,
-    service_category: category,
-    trip_id: tripId || "unknown",
+    provider_name: params.provider,
+    service_category: params.category,
+    destination: params.destination,
+    item_title: params.itemTitle || "unknown",
+    link_type: params.linkType || "unknown",
+    trip_id: params.tripId || "unknown",
   });
 }
 

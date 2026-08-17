@@ -63,6 +63,7 @@ function buildSystemPrompt(input: TripPlanningInput) {
   const mood = input.mood ?? "relax";
   const budget = input.budget ? `Rs. ${input.budget.toLocaleString("en-IN")}` : "flexible";
   const travelers = input.travelers ?? 1;
+  const originContext = input.origin ? `User Origin: ${input.origin}` : "User Origin: Unknown (Assume a major city like Delhi or Mumbai if needed for flights/trains).";
 
   return `You are Travora, an AI travel planner built for Indian travellers with international coverage.
 
@@ -72,18 +73,19 @@ Rules:
 - Prioritize budget-friendly options unless luxury is requested.
 - Include Indian travel context: trains (IRCTC-style), local food, seasonal tips.
 - Return practical day-by-day plans with 3-5 activities per day.
-- For each day provide a rich "structuredItems" array with title, description, type (flight/stay/activity/restaurant/transport/note), time, location and optional image (Unsplash URL) so the UI can render interactive cards.
+- For each day provide a rich "structuredItems" array with title, description, type (flight/stay/activity/restaurant/transport/note), time, location and optional image (Unsplash URL).
 - Provide a concise one-sentence "summary" of the trip.
-- Provide a "budgetBreakdown" array (category, amount in INR, percentage) summing to ~100%. Example categories: Flights, Accommodation, Food, Activities, Transport & Local, Misc.
-- Suggest 2-3 mock booking deals (hotel, flight or train) with realistic INR prices, ratings (0-5) and location.
+- Provide a "budgetBreakdown" array (category, amount in INR, percentage) summing to ~100%.
+- TRANSIT OPTIONS: In the 'deals' array, you MUST generate exactly 1 Flight option and 1 Train option from the User's Origin to the Destination. Provide a realistic estimated price in INR. Set the deal title to something like "Flight from Origin to Destination".
 - Use Unsplash image URLs for images.
 
 User context:
+- ${originContext}
 - Travel styles: ${styles}
 - Mood: ${mood}
 - Budget: ${budget}
 - Travelers: ${travelers}
-- Home context: India-first, but include famous international destinations when asked.`;
+- Home context: India-first.`;
 }
 
 export async function planTrip(input: TripPlanningInput): Promise<TripPlan> {
@@ -171,12 +173,15 @@ IMPORTANT DELTA UPDATE RULES:
 }
 
 function mockPlanTrip(input: TripPlanningInput): TripPlan {
+  const destination = inferDestination(input.prompt);
+  const origin = input.origin || "Delhi";
+  
   return {
     ...starterTrip,
     budget: input.budget ?? starterTrip.budget,
-    destination: inferDestination(input.prompt),
+    destination,
     durationDays: inferDuration(input.prompt) ?? starterTrip.durationDays,
-    summary: starterTrip.summary ?? `${inferDestination(input.prompt)} getaway: a well-rounded trip mixing culture, food and relaxation.`,
+    summary: starterTrip.summary ?? `${destination} getaway: a well-rounded trip mixing culture, food and relaxation.`,
     budgetBreakdown: starterTrip.budgetBreakdown ?? [
       { category: "Flights", amount: 5000, percentage: 26 },
       { category: "Accommodation", amount: 7200, percentage: 37 },

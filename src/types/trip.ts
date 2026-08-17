@@ -35,6 +35,7 @@ export type BudgetBreakdown = {
 
 export type TripPlan = {
   destination: string;
+  origin?: string;
   durationDays: number;
   budget: number;
   weather: string;

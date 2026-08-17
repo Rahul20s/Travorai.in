@@ -5,6 +5,7 @@ export type AiProvider = "openai" | "claude" | "gemini" | "deepseek" | "openrout
 export type TripPlanningInput = {
   prompt: string;
   userId?: string;
+  origin?: string;
   budget?: number;
   travelers?: number;
   mood?: "relax" | "adventure" | "romantic" | "family" | "backpacking" | "luxury";

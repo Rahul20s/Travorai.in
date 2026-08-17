@@ -27,6 +27,7 @@ export const budgetBreakdownSchema = z.object({
 
 export const tripPlanSchema = z.object({
   destination: z.string(),
+  origin: z.string().optional(),
   durationDays: z.number().int().min(1).max(30),
   budget: z.number().int().positive(),
   weather: z.string(),
