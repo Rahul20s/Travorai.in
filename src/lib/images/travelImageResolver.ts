@@ -56,7 +56,7 @@ const locationFallbacks: Record<string, string> = {
   // INTERNATIONAL
   uluwatu: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&auto=format&fit=crop&q=60",
   "burj khalifa": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&auto=format&fit=crop&q=60",
-  "eiffel tower": "https://images.unsplash.com/photo-1502602898657-3e907614f1be?w=800&auto=format&fit=crop&q=60",
+  "eiffel tower": "https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800&auto=format&fit=crop&q=60",
 };
 
 const destinationFallbacks: Record<string, string> = {
@@ -69,8 +69,8 @@ const destinationFallbacks: Record<string, string> = {
   indonesia: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&auto=format&fit=crop&q=60",
   dubai: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&auto=format&fit=crop&q=60",
   uae: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&auto=format&fit=crop&q=60",
-  paris: "https://images.unsplash.com/photo-1502602898657-3e907614f1be?w=800&auto=format&fit=crop&q=60",
-  france: "https://images.unsplash.com/photo-1502602898657-3e907614f1be?w=800&auto=format&fit=crop&q=60",
+  paris: "https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800&auto=format&fit=crop&q=60",
+  france: "https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800&auto=format&fit=crop&q=60",
   tokyo: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&auto=format&fit=crop&q=60",
   japan: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&auto=format&fit=crop&q=60",
   singapore: "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=800&auto=format&fit=crop&q=60",
@@ -113,7 +113,7 @@ const categoryFallbacks: Record<string, string> = {
   "local transport": "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&auto=format&fit=crop&q=60"
 };
 
-const DEFAULT_FALLBACK = "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&auto=format&fit=crop&q=60";
+export const DEFAULT_FALLBACK = "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&auto=format&fit=crop&q=60";
 
 /**
  * Searches a text string against a dictionary, matching longest keys first to ensure specificity.

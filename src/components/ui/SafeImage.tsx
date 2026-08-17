@@ -5,7 +5,7 @@ import Image, { ImageProps } from "next/image";
 import { cn } from "@/lib/utils";
 import { Image as ImageIcon } from "lucide-react";
 
-import { resolveTravelImage, type TravelImageContext } from "@/lib/images/travelImageResolver";
+import { resolveTravelImage, DEFAULT_FALLBACK, type TravelImageContext } from "@/lib/images/travelImageResolver";
 
 interface SafeImageProps extends Omit<ImageProps, "onError" | "onLoad" | "src"> {
   src?: string | null;
@@ -37,11 +37,13 @@ export function SafeImage({
   let activeSrc = "";
   if (errorCount === 0) {
     activeSrc = src || resolveTravelImage({ alt, src: src as string, ...resolvedContext });
-  } else if (errorCount === 1 && fallbackSrc) {
-    activeSrc = fallbackSrc;
+  } else if (errorCount === 1) {
+    // If the primary image fails, try the provided fallbackSrc or the global DEFAULT_FALLBACK
+    activeSrc = fallbackSrc || DEFAULT_FALLBACK;
   }
 
-  const isBroken = errorCount > (fallbackSrc ? 1 : 0) || !activeSrc;
+  // If errorCount > 1, meaning even the fallback/DEFAULT_FALLBACK failed, show the UI placeholder.
+  const isBroken = errorCount > 1 || !activeSrc;
 
   return (
     <div className={cn("relative overflow-hidden bg-slate-100 w-full h-full flex items-center justify-center", wrapperClassName)}>
