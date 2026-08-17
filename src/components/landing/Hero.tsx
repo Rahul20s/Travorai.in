@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
-import { Send, Sparkles } from "lucide-react";
+import { Send, Sparkles, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const QUICK_PROMPTS = [
@@ -18,6 +18,7 @@ export function Hero() {
   const router = useRouter();
   const { isSignedIn } = useAuth();
   const [input, setInput] = useState("");
+  const [isNavigating, setIsNavigating] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Auto-grow textarea
@@ -30,8 +31,12 @@ export function Hero() {
 
   const handleSubmit = (e?: React.FormEvent, customPrompt?: string) => {
     if (e) e.preventDefault();
+    if (isNavigating) return;
+    
     const promptText = customPrompt || input;
     if (!promptText.trim()) return;
+
+    setIsNavigating(true);
 
     if (!isSignedIn) {
       // Unauthenticated User: Capture and preserve input temporarily
@@ -80,17 +85,27 @@ export function Hero() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
+              disabled={isNavigating}
               placeholder="e.g. '5 days in Goa under ₹20K with beaches and nightlife'..."
-              className="flex-1 max-h-[150px] min-h-[48px] py-3 resize-none bg-transparent outline-none text-slate-900 text-base md:text-lg font-medium placeholder:text-slate-400 placeholder:font-normal"
+              className="flex-1 max-h-[150px] min-h-[48px] py-3 resize-none bg-transparent outline-none text-slate-900 text-base md:text-lg font-medium placeholder:text-slate-400 placeholder:font-normal disabled:opacity-50"
               rows={1}
             />
             <button
               type="submit"
-              disabled={!input.trim()}
-              className="mb-1 h-12 px-6 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center shrink-0 shadow-md hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600"
+              disabled={!input.trim() || isNavigating}
+              className="mb-1 h-12 px-6 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold disabled:opacity-60 disabled:cursor-not-allowed transition-all flex items-center justify-center shrink-0 shadow-md hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600 w-[140px]"
             >
-              <Sparkles className="w-5 h-5 mr-2 hidden sm:block" />
-              Plan Trip
+              {isNavigating ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Loading...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-5 h-5 mr-2 hidden sm:block" />
+                  Plan Trip
+                </>
+              )}
             </button>
           </div>
         </form>
@@ -105,9 +120,14 @@ export function Hero() {
               <button
                 key={i}
                 onClick={() => handleSubmit(undefined, prompt.val)}
-                className="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-sm font-semibold text-white transition-all hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white flex items-center gap-2"
+                disabled={isNavigating}
+                className="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-sm font-semibold text-white transition-all hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white flex items-center gap-2 disabled:opacity-50 disabled:hover:-translate-y-0"
               >
-                <Sparkles className="w-3.5 h-3.5 text-blue-300" />
+                {isNavigating && input === prompt.val ? (
+                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                   <Sparkles className="w-3.5 h-3.5 text-blue-300" />
+                )}
                 {prompt.text}
               </button>
             ))}
