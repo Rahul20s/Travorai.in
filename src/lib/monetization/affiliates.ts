@@ -178,7 +178,9 @@ export function getAffiliateProvider(category: string, destination?: string, ite
   }
 
   if (normCategory === "stay" || normCategory === "hotel") {
-    const targetUrl = `https://www.klook.com/hotels/search/?query=${encodeURIComponent(dest)}`;
+    // Klook's dedicated hotel search often 404s on deep links or requires strict IDs.
+    // The global search handles "Location Hotel" perfectly.
+    const targetUrl = `https://www.klook.com/search/result/?query=${encodeURIComponent(dest + ' Hotel')}`;
     const deepLink = generateTpMediaDeepLink("137", targetUrl, "travora_hotel", "4110", "561821");
     
     const config = getCategoryConfig(normCategory, "Klook", "provider_search");
@@ -194,9 +196,8 @@ export function getAffiliateProvider(category: string, destination?: string, ite
 
   // Flights via Aviasales
   if (normCategory === "flight") {
-    // Standard Aviasales search format requires exact IATA codes, which we don't have.
-    // So we use the homepage with a pre-filled destination query param to avoid 302 redirects.
-    const targetUrl = `https://www.aviasales.com/?destination=${encodeURIComponent(dest)}`;
+    // Use the official /search path with origin_name and destination_name which parses text to IATA on the fly
+    const targetUrl = `https://www.aviasales.com/search?origin_name=${encodeURIComponent(orig)}&destination_name=${encodeURIComponent(dest)}`;
     const deepLink = generateTpMediaDeepLink("100", targetUrl, "travora_flight", "4114", "561821");
     
     const config = getCategoryConfig(normCategory, "Aviasales", "provider_search");
@@ -212,7 +213,9 @@ export function getAffiliateProvider(category: string, destination?: string, ite
 
   // Trains via Klook (Since Klook supports Trains & Buses)
   if (normCategory === "train") {
-    const targetUrl = `https://www.klook.com/transport/`;
+    // Klook's /transport/ route defaults to Japan Trains. 
+    // We use the global search with "Train" appended to find local transport options globally.
+    const targetUrl = `https://www.klook.com/search/result/?query=${encodeURIComponent(dest + ' Train')}`;
     const deepLink = generateTpMediaDeepLink("137", targetUrl, "travora_train", "4110", "561821");
     
     const config = getCategoryConfig(normCategory, "Klook", "provider_search");
