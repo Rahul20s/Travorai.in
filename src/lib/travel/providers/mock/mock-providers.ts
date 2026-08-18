@@ -35,13 +35,15 @@ export class MockFlightProvider implements FlightProvider {
 
   async searchFlights(request: FlightSearchRequest): Promise<FlightOption[]> {
     await simulateDelay(600);
+    const origin = request.origin || "BOM";
+    const dest = request.destination || "GOI";
     return MOCK_FLIGHTS.map((f) => ({
       id: f.id,
       provider: f.provider,
       airline: f.provider,
       flightNumber: `AI-${Math.floor(Math.random() * 900) + 100}`,
-      origin: f.route.split("→")[0].trim(),
-      destination: f.route.split("→")[1].trim(),
+      origin: origin,
+      destination: dest,
       departureTime: f.departure,
       arrivalTime: f.arrival,
       duration: f.duration,
@@ -54,7 +56,7 @@ export class MockFlightProvider implements FlightProvider {
       refundable: f.cancellation === "Free Cancellation" || f.cancellation === "Partial Refund",
       fetchedAt: new Date().toISOString(),
       isMock: true,
-      deepLink: `https://aviasales.tp.st/search?origin=${encodeURIComponent(f.route.split("→")[0].trim())}&destination=${encodeURIComponent(f.route.split("→")[1].trim())}&marker=${process.env.NEXT_PUBLIC_TRAVELPAYOUTS_MARKER || "561821"}`,
+      deepLink: `https://aviasales.tp.st/search?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(dest)}&marker=${process.env.NEXT_PUBLIC_TRAVELPAYOUTS_MARKER || "561821"}`,
     }));
   }
 }
@@ -64,13 +66,15 @@ export class MockTrainProvider implements TrainProvider {
 
   async searchTrains(request: TrainSearchRequest): Promise<TrainOption[]> {
     await simulateDelay(600);
+    const origin = request.origin || "CSMT";
+    const dest = request.destination || "MAO";
     return MOCK_TRAINS.map((t) => ({
       id: t.id,
       provider: t.provider,
       trainName: t.provider,
       trainNumber: "12432",
-      origin: t.route.split("→")[0].trim(),
-      destination: t.route.split("→")[1].trim(),
+      origin: origin,
+      destination: dest,
       departureTime: t.departure,
       arrivalTime: t.arrival,
       duration: t.duration,
@@ -91,11 +95,12 @@ export class MockHotelProvider implements HotelProvider {
 
   async searchHotels(request: HotelSearchRequest): Promise<HotelOption[]> {
     await simulateDelay(800);
+    const destName = request.destination || "Goa";
     return MOCK_STAYS.map((s) => ({
       id: s.id,
       provider: "MockBookings",
-      name: s.name,
-      location: s.location,
+      name: s.name.replace(/Goa/gi, destName),
+      location: s.location.replace(/Goa/gi, destName),
       rating: s.rating,
       reviewCount: Math.floor(Math.random() * 500) + 50,
       roomType: "Standard Room",
@@ -110,7 +115,7 @@ export class MockHotelProvider implements HotelProvider {
       currency: "INR",
       fetchedAt: new Date().toISOString(),
       isMock: true,
-      deepLink: `https://hotellook.tp.st/search?destination=${encodeURIComponent(request.destination || s.location)}&marker=${process.env.NEXT_PUBLIC_TRAVELPAYOUTS_MARKER || "561821"}`,
+      deepLink: `https://hotellook.tp.st/search?destination=${encodeURIComponent(destName)}&marker=${process.env.NEXT_PUBLIC_TRAVELPAYOUTS_MARKER || "561821"}`,
     }));
   }
 }
@@ -120,12 +125,13 @@ export class MockActivityProvider implements ActivityProvider {
 
   async searchActivities(request: ActivitySearchRequest): Promise<ActivityOption[]> {
     await simulateDelay(700);
+    const destName = request.destination || "Goa";
     return MOCK_ACTIVITIES.map((a) => ({
       id: a.id,
       provider: "MockTours",
-      name: a.name,
-      destination: request.destination,
-      location: request.destination, // MOCK_ACTIVITIES doesn't have location
+      name: a.name.replace(/Goa/gi, destName),
+      destination: destName,
+      location: destName, // MOCK_ACTIVITIES doesn't have location
       category: a.type,
       duration: a.duration,
       durationMinutes: durationToMinutes(a.duration),
@@ -136,7 +142,7 @@ export class MockActivityProvider implements ActivityProvider {
       image: a.image,
       fetchedAt: new Date().toISOString(),
       isMock: true,
-      deepLink: `https://getyourguide.tp.st/search?q=${encodeURIComponent(request.destination || a.name)}&marker=${process.env.NEXT_PUBLIC_TRAVELPAYOUTS_MARKER || "561821"}`,
+      deepLink: `https://getyourguide.tp.st/search?q=${encodeURIComponent(destName)}&marker=${process.env.NEXT_PUBLIC_TRAVELPAYOUTS_MARKER || "561821"}`,
     }));
   }
 }
@@ -146,9 +152,10 @@ export class MockTransportProvider implements TransportProvider {
 
   async searchTransport(request: TransportSearchRequest): Promise<TransportOption[]> {
     await simulateDelay(500);
+    const destName = request.drop || "Goa";
     return MOCK_TRANSPORT.map((tr) => ({
       id: tr.id,
-      provider: tr.provider,
+      provider: tr.provider.replace(/Goa/gi, destName),
       vehicleType: tr.vehicle,
       pickup: request.pickup,
       drop: request.drop,
@@ -161,6 +168,7 @@ export class MockTransportProvider implements TransportProvider {
       fetchedAt: new Date().toISOString(),
       isMock: true,
       deepLink: "#",
+      details: tr.details.replace(/Goa/gi, destName)
     }));
   }
 }

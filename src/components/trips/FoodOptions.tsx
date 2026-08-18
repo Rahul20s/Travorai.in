@@ -15,7 +15,12 @@ export function FoodOptions({ destination }: { destination?: string }) {
     );
   };
 
-  const selectedOptions = MOCK_FOOD.filter(o => selectedToCompare.includes(o.id));
+  const dynamicFoodOptions = MOCK_FOOD.map(opt => ({
+    ...opt,
+    name: opt.name.replace(/Goa/gi, destination || "Goa")
+  }));
+
+  const selectedOptions = dynamicFoodOptions.filter(o => selectedToCompare.includes(o.id));
 
   return (
     <div className="w-full space-y-8">
@@ -64,7 +69,7 @@ export function FoodOptions({ destination }: { destination?: string }) {
 
       {/* Options List */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {MOCK_FOOD.map((opt) => (
+        {dynamicFoodOptions.map((opt) => (
           <div key={opt.id} className="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-lg hover:border-slate-300 transition-all flex flex-col">
             <div className="relative h-48 w-full overflow-hidden shrink-0">
               <SafeImage src={opt.image} alt={opt.name} fill className="object-cover transition-transform duration-700 hover:scale-105" context={`${opt.name} ${opt.type} ${destination}`} />
