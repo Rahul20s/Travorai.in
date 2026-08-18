@@ -3,7 +3,8 @@
 import { type TabType } from "./TripWorkspace";
 import { 
   LayoutDashboard, 
-  Map as MapIcon, 
+  Map as MapIcon,
+  MapPin,
   Plane, 
   Hotel, 
   Activity, 
@@ -11,7 +12,8 @@ import {
   Car, 
   Wallet, 
   CreditCard,
-  Receipt
+  Receipt,
+  List
 } from "lucide-react";
 
 export function TripNavigation({ 
@@ -23,7 +25,8 @@ export function TripNavigation({
 }) {
   const tabs: { id: TabType; icon: React.ReactNode }[] = [
     { id: "Overview", icon: <LayoutDashboard className="w-4 h-4" /> },
-    { id: "Itinerary", icon: <MapIcon className="w-4 h-4" /> },
+    { id: "Itinerary", icon: <List className="w-4 h-4" /> },
+    { id: "Map", icon: <MapIcon className="w-4 h-4" /> },
     { id: "Budget", icon: <Wallet className="w-4 h-4" /> },
     { id: "Travel", icon: <Plane className="w-4 h-4" /> },
     { id: "Stay", icon: <Hotel className="w-4 h-4" /> },

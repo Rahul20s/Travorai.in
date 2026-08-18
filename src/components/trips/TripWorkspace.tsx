@@ -23,6 +23,7 @@ import { BudgetEngine } from "@/lib/travel/budget-engine";
 export type TabType = 
   | "Overview"
   | "Itinerary"
+  | "Map"
   | "Travel"
   | "Stay"
   | "Activities"
@@ -34,7 +35,6 @@ export type TabType =
 
 export function TripWorkspace({ trip, rawTrip }: { trip: TripPlan, rawTrip: any }) {
   const [activeTab, setActiveTab] = useState<TabType>("Overview");
-  const [viewMode, setViewMode] = useState<"dashboard" | "planner">("planner");
   const [isLoadingSelections, setIsLoadingSelections] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -43,8 +43,6 @@ export function TripWorkspace({ trip, rawTrip }: { trip: TripPlan, rawTrip: any 
   const [selectedHotel, setSelectedHotel] = useState<HotelOption | null>(null);
   const [selectedActivities, setSelectedActivities] = useState<ActivityOption[]>([]);
   const [selectedTransport, setSelectedTransport] = useState<TransportOption | null>(null);
-
-  const [showMobileMap, setShowMobileMap] = useState(false);
 
   useEffect(() => {
     async function loadSelections() {
@@ -193,27 +191,7 @@ export function TripWorkspace({ trip, rawTrip }: { trip: TripPlan, rawTrip: any 
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm px-4 md:px-6">
         <div className="max-w-[1600px] mx-auto flex items-center justify-between">
           <div className="flex-1 overflow-x-auto scrollbar-hide py-1">
-            {viewMode === "dashboard" ? (
-              <TripNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
-            ) : (
-              <div className="flex items-center h-[52px] text-sm font-bold text-slate-800 uppercase tracking-wide">
-                AI Planner Workspace
-              </div>
-            )}
-          </div>
-          <div className="flex items-center gap-1.5 md:gap-2 py-2 pl-3 md:pl-4 shrink-0 border-l border-slate-200 ml-2 md:ml-4">
-            <button
-              onClick={() => setViewMode("dashboard")}
-              className={`p-2.5 md:px-4 md:py-2 rounded-xl flex items-center gap-2 text-sm font-bold transition-all focus-visible:ring-2 focus-visible:ring-blue-600 ${viewMode === "dashboard" ? "bg-slate-900 text-white shadow-md" : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"}`}
-            >
-              <LayoutDashboard className="w-4 h-4 md:w-4 md:h-4" /> <span className="hidden md:inline">Dashboard</span>
-            </button>
-            <button
-              onClick={() => setViewMode("planner")}
-              className={`p-2.5 md:px-4 md:py-2 rounded-xl flex items-center gap-2 text-sm font-bold transition-all focus-visible:ring-2 focus-visible:ring-blue-600 ${viewMode === "planner" ? "bg-slate-900 text-white shadow-md" : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"}`}
-            >
-              <Map className="w-4 h-4 md:w-4 md:h-4" /> <span className="hidden md:inline">AI Planner</span>
-            </button>
+            <TripNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
           </div>
         </div>
       </div>
@@ -224,60 +202,24 @@ export function TripWorkspace({ trip, rawTrip }: { trip: TripPlan, rawTrip: any 
         </div>
       )}
 
-      {viewMode === "dashboard" ? (
-        <>
-          <main className="flex-1 w-full max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-8">
-            {activeTab === "Overview" && <TripOverview trip={trip} setActiveTab={setActiveTab} />}
-            {activeTab === "Itinerary" && <TripItinerary trip={trip} />}
-            {activeTab === "Budget" && <TripBudget trip={trip} budgetState={budgetState} />}
-            {activeTab === "Travel" && <TravelOptions destination={trip.destination} selectedFlight={selectedFlight} onSelectFlight={handleSelectFlight} />}
-            {activeTab === "Stay" && <StayOptions destination={trip.destination} budget={trip.budget} selectedHotel={selectedHotel} onSelectHotel={handleSelectHotel} />}
-            {activeTab === "Activities" && <ActivityOptions destination={trip.destination} selectedActivities={selectedActivities} onToggleActivity={handleToggleActivity} />}
-            {activeTab === "Food" && <FoodOptions destination={trip.destination} />}
-            {activeTab === "Local Transport" && <LocalTransport destination={trip.destination} selectedTransport={selectedTransport} onSelectTransport={handleSelectTransport} />}
-            {activeTab === "Bookings" && <BookingCenter selectedFlight={selectedFlight} selectedHotel={selectedHotel} selectedActivities={selectedActivities} selectedTransport={selectedTransport} />}
-            {activeTab === "Expenses" && <ExpenseTracker budget={trip.budget || 0} selectedFlight={selectedFlight} selectedHotel={selectedHotel} selectedActivities={selectedActivities} selectedTransport={selectedTransport} />}
-          </main>
-          <TripAssistant trip={trip} viewMode={viewMode} />
-        </>
-      ) : (
-        <main className="flex-1 w-full max-w-[1600px] mx-auto flex flex-col md:flex-row relative">
-          
-          {/* Mobile Map Toggle Button (Sticky under header) */}
-          <div className="md:hidden sticky top-[69px] z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 p-3 flex justify-center shadow-sm">
-            <button 
-              onClick={() => setShowMobileMap(!showMobileMap)}
-              className="w-full max-w-xs h-11 bg-slate-900 text-white rounded-xl font-bold text-sm shadow-md flex items-center justify-center gap-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-slate-900"
-            >
-              <Map className="w-4 h-4" />
-              {showMobileMap ? "View Itinerary & Chat" : "View Map"}
-            </button>
+      <main className="flex-1 w-full max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-8">
+        {activeTab === "Overview" && <TripOverview trip={trip} setActiveTab={setActiveTab} />}
+        {activeTab === "Itinerary" && <TripItinerary trip={trip} />}
+        {activeTab === "Map" && (
+          <div className="w-full h-[70vh] min-h-[500px] rounded-3xl overflow-hidden border border-slate-200 shadow-sm relative">
+            <TripMap trip={trip} />
           </div>
-
-          {/* Column 1: AI Assistant */}
-          <div className={`w-full md:w-[320px] lg:w-[380px] shrink-0 border-r border-slate-200 bg-white relative ${showMobileMap ? 'hidden md:block' : 'block'}`}>
-            <div className="md:sticky md:top-[69px] md:h-[calc(100vh-69px)] flex flex-col bg-white">
-              <TripAssistant trip={trip} viewMode={viewMode} />
-            </div>
-          </div>
-          
-          {/* Column 2: Itinerary Manager */}
-          <div className={`w-full flex-1 p-4 md:p-6 lg:p-8 min-w-0 bg-slate-50 ${showMobileMap ? 'hidden md:block' : 'block'}`}>
-            <div className="mb-6 flex items-center justify-between">
-               <h2 className="text-xl md:text-2xl font-extrabold text-slate-900">Itinerary</h2>
-            </div>
-            <TripItinerary trip={trip} />
-          </div>
-          
-          {/* Column 3: Interactive Map */}
-          <div className={`w-full md:w-[350px] lg:w-[450px] shrink-0 border-l border-slate-200 bg-slate-100 ${showMobileMap ? 'block min-h-[60vh]' : 'hidden md:block'}`}>
-            <div className="md:sticky md:top-[69px] md:h-[calc(100vh-69px)] w-full h-full min-h-[500px]">
-              <TripMap trip={trip} />
-            </div>
-          </div>
-
-        </main>
-      )}
+        )}
+        {activeTab === "Budget" && <TripBudget trip={trip} budgetState={budgetState} />}
+        {activeTab === "Travel" && <TravelOptions destination={trip.destination} selectedFlight={selectedFlight} onSelectFlight={handleSelectFlight} />}
+        {activeTab === "Stay" && <StayOptions destination={trip.destination} budget={trip.budget} selectedHotel={selectedHotel} onSelectHotel={handleSelectHotel} />}
+        {activeTab === "Activities" && <ActivityOptions destination={trip.destination} selectedActivities={selectedActivities} onToggleActivity={handleToggleActivity} />}
+        {activeTab === "Food" && <FoodOptions destination={trip.destination} />}
+        {activeTab === "Local Transport" && <LocalTransport destination={trip.destination} selectedTransport={selectedTransport} onSelectTransport={handleSelectTransport} />}
+        {activeTab === "Bookings" && <BookingCenter selectedFlight={selectedFlight} selectedHotel={selectedHotel} selectedActivities={selectedActivities} selectedTransport={selectedTransport} />}
+        {activeTab === "Expenses" && <ExpenseTracker budget={trip.budget || 0} selectedFlight={selectedFlight} selectedHotel={selectedHotel} selectedActivities={selectedActivities} selectedTransport={selectedTransport} />}
+      </main>
+      <TripAssistant trip={trip} viewMode="dashboard" />
     </div>
   );
 }
