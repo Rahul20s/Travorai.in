@@ -67,12 +67,13 @@ export function SafeImage({
         <Image
           src={activeSrc}
           alt={alt}
+          unoptimized={true}
           className={cn(
             "object-cover transition-all duration-500",
             isLoading ? "scale-105 blur-sm" : "scale-100 blur-0",
             className
           )}
-          onLoadingComplete={() => setIsLoading(false)}
+          onLoad={() => setIsLoading(false)}
           onError={() => {
             setErrorCount((prev) => prev + 1);
             setIsLoading(false);

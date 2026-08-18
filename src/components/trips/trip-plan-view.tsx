@@ -241,10 +241,20 @@ export function TripPlanView({
               return (
                 <div
                   key={idx}
-                  className={`flex flex-col ${variant === "full" ? "sm:flex-row" : ""} gap-4 sm:gap-5 rounded-2xl border ${config.border} bg-white p-4 sm:p-5 transition-shadow hover:shadow-md`}
+                  className={
+                    variant === "full"
+                      ? `flex flex-col sm:flex-row gap-4 sm:gap-5 rounded-2xl border ${config.border} bg-white p-4 sm:p-5 transition-shadow hover:shadow-md`
+                      : `flex flex-row items-start gap-3 rounded-xl border ${config.border} bg-white p-3 transition-shadow hover:shadow-md`
+                  }
                 >
                   {/* Always render SafeImage, it will auto-resolve Unsplash based on context */}
-                  <div className={`relative ${variant === "full" ? "h-40 sm:h-28 w-full sm:w-28" : "h-48 w-full"} shrink-0 overflow-hidden rounded-xl`}>
+                  <div 
+                    className={
+                      variant === "full" 
+                        ? "relative h-40 sm:h-28 w-full sm:w-28 shrink-0 overflow-hidden rounded-xl"
+                        : "relative h-20 w-20 shrink-0 overflow-hidden rounded-lg"
+                    }
+                  >
                     <SafeImage
                       alt={item.title}
                       src={item.image}
@@ -277,7 +287,7 @@ export function TripPlanView({
                     </div>
 
                     {item.description && (
-                      <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
+                      <p className={`text-slate-600 leading-relaxed mb-3 ${variant === "full" ? "text-xs sm:text-sm" : "text-xs line-clamp-2"}`}>
                         {item.description}
                       </p>
                     )}
@@ -296,7 +306,7 @@ export function TripPlanView({
                     </div>
                     {/* Affiliate Booking Button */}
                     {affiliate && (
-                      <div className="mt-4 pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-end gap-3">
+                      <div className={`mt-3 pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center ${variant === "full" ? "justify-end gap-3" : "justify-start"}`}>
                         <Button
                           size="sm"
                           onClick={() => {
@@ -309,7 +319,7 @@ export function TripPlanView({
                             });
                             window.open(affiliate.url, "_blank", "noopener,noreferrer");
                           }}
-                          className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold h-10 sm:h-9 px-4 rounded-lg flex items-center justify-center gap-1.5 shadow-sm hover:shadow transition-all"
+                          className={`${variant === "full" ? "w-full sm:w-auto h-10 sm:h-9" : "w-full h-8 text-xs"} bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 rounded-lg flex items-center justify-center gap-1.5 shadow-sm hover:shadow transition-all`}
                         >
                           {affiliate.icon} {affiliate.ctaText}
                           <ExternalLink className="size-3.5 ml-0.5" />
