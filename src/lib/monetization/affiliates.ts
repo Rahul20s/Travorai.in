@@ -163,7 +163,7 @@ export function getAffiliateProvider(category: string, destination?: string, ite
   if (normCategory === "activity" || normCategory === "tour" || normCategory === "attraction" || normCategory === "restaurant") {
     // If we have an itemTitle and destination, we can make a provider_search link
     const query = itemTitle && destination ? `${itemTitle} ${destination}` : (destination || "World");
-    const targetUrl = `https://www.klook.com/en-US/search/result/?query=${encodeURIComponent(query)}`;
+    const targetUrl = `https://www.klook.com/search/result/?query=${encodeURIComponent(query)}`;
     const deepLink = generateTpMediaDeepLink("137", targetUrl, "travora_activity", "4110", "561821");
     
     const config = getCategoryConfig(normCategory, "Klook", "provider_search");
@@ -178,7 +178,7 @@ export function getAffiliateProvider(category: string, destination?: string, ite
   }
 
   if (normCategory === "stay" || normCategory === "hotel") {
-    const targetUrl = `https://www.klook.com/en-US/hotels/search/?query=${encodeURIComponent(dest)}`;
+    const targetUrl = `https://www.klook.com/hotels/search/?query=${encodeURIComponent(dest)}`;
     const deepLink = generateTpMediaDeepLink("137", targetUrl, "travora_hotel", "4110", "561821");
     
     const config = getCategoryConfig(normCategory, "Klook", "provider_search");
@@ -194,8 +194,9 @@ export function getAffiliateProvider(category: string, destination?: string, ite
 
   // Flights via Aviasales
   if (normCategory === "flight") {
-    // Standard Aviasales search format (generic IATA routing if exact codes unknown)
-    const targetUrl = `https://search.aviasales.com/?origin_name=${encodeURIComponent(orig)}&destination_name=${encodeURIComponent(dest)}`;
+    // Standard Aviasales search format requires exact IATA codes, which we don't have.
+    // So we use the homepage with a pre-filled destination query param to avoid 302 redirects.
+    const targetUrl = `https://www.aviasales.com/?destination=${encodeURIComponent(dest)}`;
     const deepLink = generateTpMediaDeepLink("100", targetUrl, "travora_flight", "4114", "561821");
     
     const config = getCategoryConfig(normCategory, "Aviasales", "provider_search");
@@ -211,9 +212,7 @@ export function getAffiliateProvider(category: string, destination?: string, ite
 
   // Trains via Klook (Since Klook supports Trains & Buses)
   if (normCategory === "train") {
-    // We send them to Klook's transport/train page.
-    // If we have an origin and destination, we try to append it, but a safe fallback is Klook's transport vertical.
-    const targetUrl = `https://www.klook.com/en-US/transport/`;
+    const targetUrl = `https://www.klook.com/transport/`;
     const deepLink = generateTpMediaDeepLink("137", targetUrl, "travora_train", "4110", "561821");
     
     const config = getCategoryConfig(normCategory, "Klook", "provider_search");
@@ -229,7 +228,8 @@ export function getAffiliateProvider(category: string, destination?: string, ite
 
   // Airport Transfers via Kiwitaxi
   if (normCategory === "transfer" || normCategory === "transport" || normCategory === "airport_transfer") {
-    const targetUrl = `https://kiwitaxi.com/en/search?city=${encodeURIComponent(dest)}`;
+    // Avoid /search which might 302 redirect if the city isn't an exact match
+    const targetUrl = `https://kiwitaxi.com/en/?place_to=${encodeURIComponent(dest)}`;
     const deepLink = generateTpMediaDeepLink("1", targetUrl, "travora_transfer", "647", "561821");
     
     const config = getCategoryConfig(normCategory, "Kiwitaxi", "provider_search");
@@ -245,7 +245,8 @@ export function getAffiliateProvider(category: string, destination?: string, ite
 
   // Car Rentals via QEEQ
   if (normCategory === "car" || normCategory === "car_rental") {
-    const targetUrl = `https://www.qeeq.com/search?pickup_location=${encodeURIComponent(dest)}`;
+    // Avoid /search which causes a 302 /error redirect on unknown locations
+    const targetUrl = `https://www.qeeq.com/?pickUpLocationName=${encodeURIComponent(dest)}`;
     const deepLink = generateTpMediaDeepLink("172", targetUrl, "travora_car", "4845", "561821");
     
     const config = getCategoryConfig(normCategory, "QEEQ", "provider_search");
