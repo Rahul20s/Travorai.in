@@ -241,11 +241,11 @@ export function TripPlanView({
               return (
                 <div
                   key={idx}
-                  className={`flex flex-col sm:flex-row gap-4 sm:gap-5 rounded-2xl border ${config.border} bg-white p-4 sm:p-5 transition-shadow hover:shadow-md`}
+                  className={`flex flex-col ${variant === "full" ? "sm:flex-row" : ""} gap-4 sm:gap-5 rounded-2xl border ${config.border} bg-white p-4 sm:p-5 transition-shadow hover:shadow-md`}
                 >
                   {/* Large image / icon area */}
                   {item.image ? (
-                    <div className="relative h-40 sm:h-28 w-full sm:w-28 shrink-0 overflow-hidden rounded-xl">
+                    <div className={`relative ${variant === "full" ? "h-40 sm:h-28 w-full sm:w-28" : "h-48 w-full"} shrink-0 overflow-hidden rounded-xl`}>
                       <SafeImage
                         alt={item.title}
                         src={item.image}
@@ -256,7 +256,7 @@ export function TripPlanView({
                     </div>
                   ) : (
                     <div
-                      className={`grid h-40 sm:h-28 w-full sm:w-28 shrink-0 place-items-center rounded-xl ${config.bg}`}
+                      className={`grid ${variant === "full" ? "h-40 sm:h-28 w-full sm:w-28" : "h-24 w-full"} shrink-0 place-items-center rounded-xl ${config.bg}`}
                     >
                       <span className="text-4xl">{config.icon}</span>
                     </div>
@@ -278,14 +278,14 @@ export function TripPlanView({
                         </h4>
                       </div>
                       {price && (
-                        <span className="shrink-0 text-sm font-extrabold text-slate-900 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-md">
+                        <span className="shrink-0 text-xs sm:text-sm font-extrabold text-slate-900 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-md">
                           {price}
                         </span>
                       )}
                     </div>
 
                     {item.description && (
-                      <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                      <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
                         {item.description}
                       </p>
                     )}
