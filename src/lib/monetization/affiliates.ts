@@ -194,18 +194,17 @@ export function getAffiliateProvider(category: string, destination?: string, ite
     };
   }
 
-  // Flights via Aviasales
+  // Flights via Kiwi.com
   if (normCategory === "flight") {
-    // Aviasales strictly requires IATA codes and dates to launch a search.
-    // If we pass generic city strings to /search, their frontend React app crashes ("search failed to launch").
-    // We must link to the homepage so the user can input dates and airports manually.
-    const targetUrl = `https://www.aviasales.com/`;
-    const deepLink = generateTpMediaDeepLink("100", targetUrl, "travora_flight", "4114", "561821");
+    // Kiwi.com elegantly parses string city names (unlike Aviasales which requires IATA).
+    // We construct the direct Kiwi deep link and append the TravelPayouts affilid with the user's marker.
+    // The format allows prefilling origin and destination.
+    const targetUrl = `https://www.kiwi.com/en/search/results/${encodeURIComponent(orig)}/${encodeURIComponent(dest)}?affilid=travelpayoutsdeeplink_${TRAVELPAYOUTS_MARKER}`;
     
-    const config = getCategoryConfig(normCategory, "Aviasales", "provider_search");
+    const config = getCategoryConfig(normCategory, "Kiwi.com", "provider_search");
     return {
-      providerName: "Aviasales",
-      url: deepLink,
+      providerName: "Kiwi.com",
+      url: targetUrl,
       ctaText: config.ctaText,
       icon: config.icon,
       linkType: "provider_search",
