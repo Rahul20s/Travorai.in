@@ -196,8 +196,10 @@ export function getAffiliateProvider(category: string, destination?: string, ite
 
   // Flights via Aviasales
   if (normCategory === "flight") {
-    // Use the official /search path with origin_name and destination_name which parses text to IATA on the fly
-    const targetUrl = `https://www.aviasales.com/search?origin_name=${encodeURIComponent(orig)}&destination_name=${encodeURIComponent(dest)}`;
+    // Aviasales strictly requires IATA codes and dates to launch a search.
+    // If we pass generic city strings to /search, their frontend React app crashes ("search failed to launch").
+    // We must link to the homepage so the user can input dates and airports manually.
+    const targetUrl = `https://www.aviasales.com/`;
     const deepLink = generateTpMediaDeepLink("100", targetUrl, "travora_flight", "4114", "561821");
     
     const config = getCategoryConfig(normCategory, "Aviasales", "provider_search");
