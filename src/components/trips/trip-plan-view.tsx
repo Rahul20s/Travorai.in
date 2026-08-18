@@ -243,24 +243,16 @@ export function TripPlanView({
                   key={idx}
                   className={`flex flex-col ${variant === "full" ? "sm:flex-row" : ""} gap-4 sm:gap-5 rounded-2xl border ${config.border} bg-white p-4 sm:p-5 transition-shadow hover:shadow-md`}
                 >
-                  {/* Large image / icon area */}
-                  {item.image ? (
-                    <div className={`relative ${variant === "full" ? "h-40 sm:h-28 w-full sm:w-28" : "h-48 w-full"} shrink-0 overflow-hidden rounded-xl`}>
-                      <SafeImage
-                        alt={item.title}
-                        src={item.image}
-                        fill
-                        className="object-cover"
-                        context={`${item.location || ""} ${item.type || ""} ${item.description || ""} ${trip.destination}`}
-                      />
-                    </div>
-                  ) : (
-                    <div
-                      className={`grid ${variant === "full" ? "h-40 sm:h-28 w-full sm:w-28" : "h-24 w-full"} shrink-0 place-items-center rounded-xl ${config.bg}`}
-                    >
-                      <span className="text-4xl">{config.icon}</span>
-                    </div>
-                  )}
+                  {/* Always render SafeImage, it will auto-resolve Unsplash based on context */}
+                  <div className={`relative ${variant === "full" ? "h-40 sm:h-28 w-full sm:w-28" : "h-48 w-full"} shrink-0 overflow-hidden rounded-xl`}>
+                    <SafeImage
+                      alt={item.title}
+                      src={item.image}
+                      fill
+                      className="object-cover"
+                      context={`${item.location || ""} ${item.type || ""} ${item.description || ""} ${trip.destination}`}
+                    />
+                  </div>
 
                   {/* Content */}
                   <div className="flex-1 min-w-0 flex flex-col justify-center">
