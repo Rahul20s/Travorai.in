@@ -41,8 +41,8 @@ export function DestinationCard({
         wrapperClassName="absolute inset-0 w-full h-full"
       />
 
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent transition-all duration-300 group-hover:from-slate-950/95" />
+      {/* Dark Overlay (warm, bottom-to-top) */}
+      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.75) 100%)" }} />
 
       {/* Content */}
       <div className="absolute inset-x-0 bottom-0 p-6 flex flex-col justify-end text-white">
