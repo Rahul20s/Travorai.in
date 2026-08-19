@@ -132,10 +132,18 @@ export function TripPlanView({
 
             {/* Summary */}
             {trip.summary && (
-              <p className="text-slate-600 text-base md:text-lg leading-relaxed max-w-3xl mb-8 font-medium">
+              <p className="text-slate-600 text-base md:text-lg leading-relaxed max-w-3xl mb-4 font-medium">
                 {trip.summary}
               </p>
             )}
+
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-50 text-amber-700 text-xs font-bold rounded-lg border border-amber-200 mb-8">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+              </span>
+              AI-generated estimate — please confirm details before booking.
+            </div>
 
             {/* Meta badges */}
             <div className="flex flex-wrap gap-3">
