@@ -63,6 +63,9 @@ export function DestinationCard({
 
         {/* Metadata Badges */}
         <div className="flex flex-wrap gap-2 pt-4 border-t border-white/10 text-[11px] font-bold tracking-wide text-white">
+          <span className="flex items-center gap-1.5 bg-blue-600/80 backdrop-blur-md rounded-lg px-3 py-1.5 border border-blue-500/50 text-white">
+            Sample Plan
+          </span>
           {duration && (
             <span className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md rounded-lg px-3 py-1.5">
               <Calendar className="w-3.5 h-3.5 text-slate-300" />
@@ -72,7 +75,7 @@ export function DestinationCard({
           {budget && (
             <span className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md rounded-lg px-3 py-1.5">
               <CircleDollarSign className="w-3.5 h-3.5 text-slate-300" />
-              {budget}
+              From {budget}
             </span>
           )}
         </div>

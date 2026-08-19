@@ -19,10 +19,10 @@ export function TrendingDestinations() {
               Trending Now
             </div>
             <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
-              Where to next?
+              Popular starting points
             </h2>
             <p className="text-lg text-slate-500 font-medium leading-relaxed">
-              Discover the world's most incredible destinations. Let our AI craft your perfect itinerary in seconds.
+              Get inspired by the world's most incredible destinations, then let our AI customize them for you.
             </p>
           </div>
         </div>

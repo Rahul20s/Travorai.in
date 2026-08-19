@@ -69,6 +69,9 @@ export function Hero() {
       </div>
 
       <div className="relative z-10 mx-auto w-full max-w-4xl px-6 text-center flex flex-col items-center mt-8">
+        <span className="inline-block px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-xs font-bold tracking-widest uppercase border border-white/30 text-white mb-6">
+          Currently in Public Beta
+        </span>
         <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-tight drop-shadow-sm mb-4 max-w-3xl">
           Where to today?
         </h1>

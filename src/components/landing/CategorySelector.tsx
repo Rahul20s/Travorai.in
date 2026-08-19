@@ -9,8 +9,6 @@ const categories = [
   { label: "Hotels & Stays", icon: Hotel, href: "/stays", badge: null, comingSoon: false },
   { label: "Trains", icon: Train, href: "/dashboard", badge: null, comingSoon: false },
   { label: "Activities", icon: Compass, href: "/dashboard", badge: null, comingSoon: false },
-  { label: "Cabs", icon: Car, href: "#", badge: "Soon", comingSoon: true },
-  { label: "Bike Rentals", icon: Bike, href: "#", badge: "Soon", comingSoon: true },
   { label: "Restaurants", icon: Utensils, href: "/dashboard", badge: null, comingSoon: false },
   { label: "Experiences", icon: Sparkles, href: "/dashboard", badge: "Popular", comingSoon: false },
 ];

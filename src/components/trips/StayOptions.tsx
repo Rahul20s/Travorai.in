@@ -58,7 +58,14 @@ export function StayOptions({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Stays in {destination || "Destination"}</h2>
-          <p className="text-slate-500 font-medium mt-1">Curated accommodation options matching your budget.</p>
+          <p className="text-slate-500 font-medium mt-1">Found {hotels.length} options matching your vibe.</p>
+          <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 bg-amber-50 text-amber-700 text-xs font-bold rounded-lg border border-amber-200">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+            </span>
+            AI-generated estimate — please confirm details before booking.
+          </div>
         </div>
       </div>
 

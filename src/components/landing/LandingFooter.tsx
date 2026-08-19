@@ -18,7 +18,7 @@ export function LandingFooter() {
               <span className="text-xl font-extrabold text-slate-900 tracking-tight">Travora</span>
             </Link>
             <p className="text-slate-500 text-sm leading-relaxed max-w-xs">
-              Your AI-powered travel assistant. Discover locations, build custom budgets, and compare hotel deals in a single workflow.
+              Built by a solo Indian traveler-turned-developer, frustrated with having 20 tabs open just to plan a weekend trip. Your all-in-one AI travel assistant.
             </p>
           </div>
 
@@ -46,9 +46,8 @@ export function LandingFooter() {
             <p className="font-bold text-slate-900 mb-4 text-sm tracking-wider uppercase">Company</p>
             <ul className="space-y-3">
               {[
-                { label: "About Us", href: "/" },
-                { label: "Contact", href: "/" },
-                { label: "Help Guide", href: "/" },
+                { label: "Contact Us", href: "/contact" },
+                { label: "Get Help", href: "/contact" },
               ].map((l) => (
                 <li key={l.label}>
                   <Link href={l.href} className="text-sm text-slate-500 hover:text-slate-950 transition-colors">
@@ -83,9 +82,8 @@ export function LandingFooter() {
             <p className="font-bold text-slate-900 mb-4 text-sm tracking-wider uppercase">Legal</p>
             <ul className="space-y-3">
               {[
-                { label: "Privacy Policy", href: "/" },
-                { label: "Terms of Service", href: "/" },
-                { label: "Cookie Settings", href: "/" },
+                { label: "Privacy Policy", href: "/privacy" },
+                { label: "Terms of Service", href: "/terms" },
               ].map((l) => (
                 <li key={l.label}>
                   <Link href={l.href} className="text-sm text-slate-500 hover:text-slate-950 transition-colors">
