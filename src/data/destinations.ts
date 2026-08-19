@@ -484,5 +484,185 @@ export const destinations: DestinationData[] = [
       { question: "Is the Swiss Travel Pass worth the money?", answer: "Absolutely. It covers all trains, buses, and boats, provides free entry to 500+ museums, and offers 50% discounts on mountain cable cars." },
       { question: "Can I do a day trip to Paris from Zurich?", answer: "Yes, the TGV high-speed train takes about 4 hours, but it's better to dedicate at least 3 days to Paris." }
     ]
+  },
+  {
+    slug: "thailand",
+    name: "Thailand",
+    country: "Thailand",
+    heroImageContext: "Thailand Phi Phi islands longtail boat",
+    heroSubtitle: "Plan a personalized Thailand trip with Travora AI.",
+    metaTitle: "Thailand Travel Guide & Itineraries | Travora",
+    metaDescription: "The ultimate Thailand travel guide. Discover Bangkok's street food, Chiang Mai's temples, and Phuket's beaches with our custom itineraries.",
+    quickInfo: {
+      bestTime: "November to early April for cool and dry weather.",
+      idealDuration: "7 to 10 days.",
+      approxBudget: "₹30,000 - ₹50,000 per person.",
+      visaInfo: "Visa free entry for Indians (temporary program) or Visa on Arrival.",
+      howToReach: "Direct flights to Bangkok (BKK/DMK) or Phuket (HKT).",
+      localTransport: "BTS/MRT in Bangkok. Grab app for taxis. Domestic flights are very cheap via AirAsia.",
+    },
+    whatToDo: [
+      {
+        category: "City & Culture",
+        items: ["Grand Palace (Bangkok)", "Wat Pho (Reclining Buddha)", "Chatuchak Weekend Market"]
+      },
+      {
+        category: "Islands & Beaches",
+        items: ["Phi Phi Islands Island Hopping", "Railay Beach (Krabi)", "Full Moon Party (Koh Phangan)"]
+      },
+      {
+        category: "Nature & Temples",
+        items: ["Elephant Nature Park (Chiang Mai)", "Doi Suthep Temple", "Ayutthaya Historical Park"]
+      }
+    ],
+    sampleItineraries: [
+      { days: 5, title: "Bangkok & Phuket", description: "2 days exploring Bangkok's temples and markets, 3 days relaxing in Phuket." },
+      { days: 7, title: "The Classic Route", description: "Bangkok (2N) -> Chiang Mai (2N) -> Phuket/Krabi (3N)." },
+      { days: 10, title: "Island Hopper", description: "Skip the north. Focus on Bangkok and the southern islands (Phuket, Koh Phi Phi, Krabi)." }
+    ],
+    budgetGuide: {
+      budget: "₹2,500 - ₹3,500/day (Hostels, street food (Pad Thai), local buses)",
+      midRange: "₹6,000 - ₹10,000/day (3/4-star hotels, Grab taxis, island day tours)",
+      luxury: "₹25,000+/day (5-star beach resorts, private speedboats, rooftop dining in BKK)"
+    },
+    faqs: [
+      { question: "Is street food safe to eat?", answer: "Yes! Look for stalls with high turnover and locals queuing. It's the best food in the country." },
+      { question: "Phuket or Krabi?", answer: "Phuket has more nightlife and luxury resorts. Krabi is more laid-back with dramatic limestone cliffs." }
+    ]
+  },
+  {
+    slug: "vietnam",
+    name: "Vietnam",
+    country: "Vietnam",
+    heroImageContext: "Vietnam Halong Bay cruise",
+    heroSubtitle: "Plan a personalized Vietnam trip with Travora AI.",
+    metaTitle: "Vietnam Travel Guide & Itineraries | Travora",
+    metaDescription: "Explore Vietnam from North to South. Plan trips to Hanoi, Halong Bay, Hoi An, and Ho Chi Minh City.",
+    quickInfo: {
+      bestTime: "March to April or September to November (varies heavily by region).",
+      idealDuration: "10 to 14 days to see North, Central, and South.",
+      approxBudget: "₹35,000 - ₹60,000 per person.",
+      visaInfo: "E-visa required for Indians (apply online, takes 3-5 days).",
+      howToReach: "Direct flights via VietJet to Hanoi (HAN) or Ho Chi Minh City (SGN).",
+      localTransport: "Domestic flights (VietJet/VN Airlines) or the Reunification Express train. Grab is widely used.",
+    },
+    whatToDo: [
+      {
+        category: "The North",
+        items: ["Halong Bay Overnight Cruise", "Hanoi Old Quarter", "Sapa Trekking"]
+      },
+      {
+        category: "Central",
+        items: ["Hoi An Ancient Town (Lanterns)", "Golden Bridge (Da Nang)", "Imperial City (Hue)"]
+      },
+      {
+        category: "The South",
+        items: ["Cu Chi Tunnels", "Mekong Delta Boat Tour", "War Remnants Museum (HCMC)"]
+      }
+    ],
+    sampleItineraries: [
+      { days: 7, title: "Northern Vietnam", description: "Hanoi (2N), Halong Bay Cruise (1N), Ninh Binh (2N), Sapa (2N)." },
+      { days: 10, title: "North & Central", description: "Hanoi & Halong Bay (4N), fly to Da Nang to explore Hoi An and Hue (6N)." },
+      { days: 14, title: "The Full Length", description: "Hanoi -> Halong -> Da Nang -> Hoi An -> Ho Chi Minh City." }
+    ],
+    budgetGuide: {
+      budget: "₹2,000 - ₹3,000/day (Hostels, Pho/Banh Mi, sleeper buses)",
+      midRange: "₹5,000 - ₹8,000/day (Boutique hotels, domestic flights, guided day tours)",
+      luxury: "₹20,000+/day (Luxury Halong Bay cruises, 5-star resorts in Da Nang)"
+    },
+    faqs: [
+      { question: "Is it safe to cross the street?", answer: "Traffic is chaotic! Walk slowly and predictably, and the motorbikes will weave around you." },
+      { question: "Do I need to book the Halong Bay cruise in advance?", answer: "Yes, especially if you want a quality mid-range or luxury boat. Budget boats can be booked locally." }
+    ]
+  },
+  {
+    slug: "andaman",
+    name: "Andaman Islands",
+    country: "India",
+    heroImageContext: "Andaman Havelock Radhanagar beach",
+    heroSubtitle: "Plan a personalized Andaman trip with Travora AI.",
+    metaTitle: "Andaman Islands Travel Guide & Itineraries | Travora",
+    metaDescription: "India's tropical paradise. A complete guide to Port Blair, Havelock, Neil Island, and the best scuba diving spots.",
+    quickInfo: {
+      bestTime: "October to May for calm seas and clear diving visibility.",
+      idealDuration: "6 to 7 days.",
+      approxBudget: "₹25,000 - ₹45,000 per person.",
+      visaInfo: "Domestic destination for Indians (No visa). Foreigners need a Restricted Area Permit (RAP).",
+      howToReach: "Fly into Port Blair (IXZ) from Chennai, Kolkata, or Delhi.",
+      localTransport: "Private ferries (Makruzz/Green Ocean) between islands. Rent scooters locally.",
+    },
+    whatToDo: [
+      {
+        category: "Beaches",
+        items: ["Radhanagar Beach (Havelock)", "Elephant Beach (Water Sports)", "Laxmanpur Beach (Neil Island)"]
+      },
+      {
+        category: "History",
+        items: ["Cellular Jail Light & Sound Show", "Ross Island (Netaji Subhash Chandra Bose Dweep)"]
+      },
+      {
+        category: "Diving",
+        items: ["Scuba Diving at Havelock", "Snorkeling at North Bay", "Sea Walk"]
+      }
+    ],
+    sampleItineraries: [
+      { days: 5, title: "Andaman Express", description: "Port Blair (1N) -> Havelock (3N) -> Port Blair (1N)." },
+      { days: 7, title: "The Island Hopper", description: "Port Blair (2N) -> Havelock (3N) -> Neil Island (2N)." },
+      { days: 9, title: "The Deep Dive", description: "Include Baratang Island (Limestone Caves) and Diglipur for a truly offbeat experience." }
+    ],
+    budgetGuide: {
+      budget: "₹3,000 - ₹4,500/day (Budget guesthouses, government ferries, rented scooters)",
+      midRange: "₹8,000 - ₹12,000/day (3-star beach resorts, private Makruzz ferries, scuba diving)",
+      luxury: "₹20,000+/day (Taj Exotica Havelock, private chartered boats)"
+    },
+    faqs: [
+      { question: "Can I book the private ferries locally?", answer: "It is highly recommended to book Makruzz or Green Ocean tickets online well in advance as they sell out." },
+      { question: "Is internet available?", answer: "Internet connectivity has improved drastically with the undersea cable, but expect occasional outages on remote islands." }
+    ]
+  },
+  {
+    slug: "rajasthan",
+    name: "Rajasthan",
+    country: "India",
+    heroImageContext: "Rajasthan Jaipur Hawa Mahal palace",
+    heroSubtitle: "Plan a personalized Rajasthan trip with Travora AI.",
+    metaTitle: "Rajasthan Travel Guide & Itineraries | Travora",
+    metaDescription: "The Land of Kings. Plan your royal journey through Jaipur, Udaipur, Jodhpur, and Jaisalmer with our expert itineraries.",
+    quickInfo: {
+      bestTime: "October to March. Avoid the extreme summer heat.",
+      idealDuration: "8 to 12 days for the full circuit.",
+      approxBudget: "₹20,000 - ₹40,000 per person.",
+      visaInfo: "Domestic destination.",
+      howToReach: "Fly into Jaipur (JAI) or Udaipur (UDR). Excellent train connectivity via Indian Railways.",
+      localTransport: "Hiring a private AC taxi for the entire 10-day circuit is the most comfortable and popular way to travel.",
+    },
+    whatToDo: [
+      {
+        category: "Forts & Palaces",
+        items: ["Amer Fort (Jaipur)", "Mehrangarh Fort (Jodhpur)", "City Palace (Udaipur)"]
+      },
+      {
+        category: "Desert Experience",
+        items: ["Sam Sand Dunes (Jaisalmer)", "Camel Safari", "Desert Camp Overnight Stay"]
+      },
+      {
+        category: "Culture",
+        items: ["Pushkar Camel Fair (November)", "Ranthambore Tiger Safari", "Chokhi Dhani (Jaipur)"]
+      }
+    ],
+    sampleItineraries: [
+      { days: 5, title: "The Golden Triangle Extension", description: "Delhi -> Agra -> Jaipur (2N) -> Ranthambore (2N)." },
+      { days: 8, title: "The Royal Cities", description: "Jaipur (2N) -> Jodhpur (2N) -> Udaipur (3N)." },
+      { days: 12, title: "The Grand Rajasthan Tour", description: "Jaipur -> Bikaner -> Jaisalmer (Desert) -> Jodhpur -> Udaipur." }
+    ],
+    budgetGuide: {
+      budget: "₹2,000 - ₹3,500/day (Zostel/Hostels, trains, local thalis)",
+      midRange: "₹6,000 - ₹10,000/day (Heritage havelis, private AC cab, nice rooftop restaurants)",
+      luxury: "₹30,000+/day (Taj Lake Palace/Umaid Bhawan stays, private guides)"
+    },
+    faqs: [
+      { question: "Is Rajasthan safe?", answer: "Very safe. It is one of the most tourist-friendly states in India, though beware of aggressive touts and shopping scams." },
+      { question: "Can I do the whole circuit by train?", answer: "Yes, cities like Jaipur, Jodhpur, and Jaisalmer are well connected by rail, but a private taxi offers more flexibility." }
+    ]
   }
 ];

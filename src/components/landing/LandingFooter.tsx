@@ -59,6 +59,25 @@ export function LandingFooter() {
             </ul>
           </div>
 
+          {/* Top Destinations Column */}
+          <div>
+            <p className="font-bold text-slate-900 mb-4 text-sm tracking-wider uppercase">Top Destinations</p>
+            <ul className="space-y-3">
+              {[
+                { label: "Bali Guide", href: "/destinations/bali" },
+                { label: "Dubai Guide", href: "/destinations/dubai" },
+                { label: "Goa Guide", href: "/destinations/goa" },
+                { label: "View All Destinations", href: "/destinations" },
+              ].map((l) => (
+                <li key={l.label}>
+                  <Link href={l.href} className="text-sm text-slate-500 hover:text-slate-950 transition-colors">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           {/* Legal Column */}
           <div>
             <p className="font-bold text-slate-900 mb-4 text-sm tracking-wider uppercase">Legal</p>
