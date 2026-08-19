@@ -9,7 +9,7 @@ export function IndiaDestinations() {
   const indiaDestinations = destinations.filter(d => d.country === "India");
 
   return (
-    <section className="py-16 bg-slate-50/50">
+    <section className="py-16 bg-white">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10">
           <div>

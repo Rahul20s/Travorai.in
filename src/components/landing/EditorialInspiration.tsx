@@ -31,7 +31,7 @@ const articles = [
 
 export function EditorialInspiration() {
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-slate-50">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10">
           <div>

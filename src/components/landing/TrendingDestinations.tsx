@@ -10,7 +10,7 @@ export function TrendingDestinations() {
   const trending = destinations.slice(0, 4);
 
   return (
-    <section className="py-24 bg-white">
+    <section className="py-24 bg-slate-50">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <div className="max-w-2xl">

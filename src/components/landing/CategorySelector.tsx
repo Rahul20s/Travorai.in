@@ -15,7 +15,7 @@ const categories = [
 
 export function CategorySelector() {
   return (
-    <section className="py-10 bg-slate-50/50 border-y border-slate-100">
+    <section className="py-10 bg-white border-y border-slate-100">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex overflow-x-auto pb-4 scrollbar-none gap-5 md:grid md:grid-cols-4 lg:grid-cols-8 md:pb-0">
           {categories.map((cat) => {

@@ -5,7 +5,7 @@ import { MessageSquare, ArrowRight, CheckCircle, Sparkles, MapPin, Calendar, Use
 
 export function AIDifferentiator() {
   return (
-    <section className="py-16 bg-white border-y border-slate-100">
+    <section className="py-16 bg-slate-50 border-y border-slate-100">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid gap-16 lg:grid-cols-2 items-center">
           {/* Text Info */}

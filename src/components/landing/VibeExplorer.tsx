@@ -27,7 +27,7 @@ export function VibeExplorer() {
   const filtered = destinations.filter(d => activeNames.includes(d.name)).slice(0, 4);
 
   return (
-    <section className="py-24 bg-slate-50 relative overflow-hidden">
+    <section className="py-24 bg-white relative overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
           <div className="max-w-2xl">

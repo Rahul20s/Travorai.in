@@ -8,7 +8,7 @@ export function InternationalDestinations() {
   const internationalDestinations = destinations.filter(d => d.country !== "India");
 
   return (
-    <section className="py-24 bg-white relative">
+    <section className="py-24 bg-slate-50 relative">
       <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-[0.03]" />
       
       <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
