@@ -95,29 +95,11 @@ export function LandingFooter() {
           </div>
         </div>
 
-        {/* Copy / Social Row */}
+        {/* Copy Row */}
         <div className="border-t border-slate-200/60 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-slate-400">
             © {new Date().getFullYear()} Travora. All rights reserved. Built for Indian & international travellers.
           </p>
-          <div className="flex items-center gap-6">
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-slate-400 hover:text-slate-900 transition-colors font-semibold"
-            >
-              Instagram
-            </a>
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-slate-400 hover:text-slate-900 transition-colors font-semibold"
-            >
-              Twitter
-            </a>
-          </div>
         </div>
       </div>
     </footer>
