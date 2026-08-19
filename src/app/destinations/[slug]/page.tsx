@@ -4,6 +4,7 @@ import Link from "next/link";
 import { destinations } from "@/data/destinations";
 import { SafeImage } from "@/components/ui/SafeImage";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { Calendar, Clock, CreditCard, Plane, MapPin, Bus, CheckCircle2, ChevronRight, Sparkles } from "lucide-react";
 
 interface Props {
@@ -56,39 +57,20 @@ export default async function DestinationPage({ params }: Props) {
       />
 
       {/* Hero Section */}
-      <section className="relative h-[60vh] min-h-[500px] w-full flex items-center justify-center">
-        <SafeImage
-          src=""
-          context={destination.heroImageContext}
-          alt={destination.name}
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-slate-900/40" />
-        
-        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center text-white space-y-6">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-sm font-bold tracking-wider uppercase border border-white/30">
-            Destination Guide
-          </span>
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight">
-            {destination.name}
-          </h1>
-          <p className="text-xl md:text-2xl font-medium text-white/90 max-w-2xl mx-auto">
-            {destination.heroSubtitle}
-          </p>
-          <div className="pt-4">
-            <Link href={`/dashboard?prompt=Plan a personalized trip to ${destination.name}`}>
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8 py-6 text-lg font-bold shadow-xl shadow-blue-900/20">
-                <Sparkles className="w-5 h-5 mr-2" />
-                Plan My {destination.name} Trip
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
+      <PageHeader 
+        title={destination.name} 
+        subtitle={destination.heroSubtitle}
+        imageContext={destination.heroImageContext}
+      >
+        <Link href={`/dashboard?prompt=Plan a personalized trip to ${destination.name}`}>
+          <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6 py-5 text-sm font-bold shadow-lg mt-2">
+            <Sparkles className="w-4 h-4 mr-2" />
+            Plan My {destination.name} Trip
+          </Button>
+        </Link>
+      </PageHeader>
 
-      <main className="max-w-4xl mx-auto px-6 -mt-12 relative z-20 space-y-16">
+      <main className="max-w-4xl mx-auto px-6 mt-8 relative z-20 space-y-16">
         
         {/* Quick Information */}
         <section className="bg-white rounded-3xl p-8 md:p-10 shadow-xl shadow-slate-200/50 border border-slate-100">

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { AiChatSearch } from "@/components/AiChatSearch";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 const featuredHotels = [
   { name: "Taj Mahal Palace", city: "Mumbai", rating: "9.2", category: "Luxury · Heritage", price: "₹28,000/night", img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop" },
@@ -14,7 +15,7 @@ const featuredHotels = [
 
 export default function StaysPage() {
   return (
-    <main className="min-h-screen bg-white font-sans">
+    <main className="min-h-screen bg-slate-50 font-sans">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/95 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
@@ -36,30 +37,17 @@ export default function StaysPage() {
       </header>
 
       {/* Hero */}
-      <section className="relative min-h-[60vh] flex items-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=2000&auto=format&fit=crop"
-            alt="Luxury hotel pool"
-            fill
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
-        </div>
-        <div className="relative z-10 mx-auto max-w-7xl px-5 w-full">
-          <div className="max-w-2xl">
-            <p className="text-sm font-bold uppercase tracking-widest text-indigo-400 mb-4">🏨 Curated by AI</p>
-            <h1 className="text-5xl md:text-[64px] font-extrabold text-white tracking-tight leading-tight mb-6">
-              Stay at the best hotels in the world.
-            </h1>
-            <p className="text-xl text-white/80 font-medium mb-10 leading-relaxed">
-              Our AI recommends hotels that match your budget, travel style, and itinerary — perfectly integrated into your trip plan.
-            </p>
-            <div className="bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-2xl">
+      <PageHeader 
+        title="Stays" 
+        subtitle="Stay at the best hotels in the world, curated by AI."
+        imageContext="Luxury hotel pool and resort"
+      />
+
+      <section className="bg-slate-50 pt-10 pb-6">
+        <div className="mx-auto max-w-3xl px-5">
+            <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
               <AiChatSearch />
             </div>
-          </div>
         </div>
       </section>
 

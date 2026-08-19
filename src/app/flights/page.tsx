@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { AiChatSearch } from "@/components/AiChatSearch";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 const popularRoutes = [
   { from: "Delhi", to: "Goa", price: "₹3,200", img: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=400&auto=format&fit=crop" },
@@ -14,7 +15,7 @@ const popularRoutes = [
 
 export default function FlightsPage() {
   return (
-    <main className="min-h-screen bg-white font-sans">
+    <main className="min-h-screen bg-slate-50 font-sans">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/95 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
@@ -36,30 +37,17 @@ export default function FlightsPage() {
       </header>
 
       {/* Hero */}
-      <section className="relative min-h-[60vh] flex items-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2000&auto=format&fit=crop"
-            alt="Airplane flying above clouds"
-            fill
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
-        </div>
-        <div className="relative z-10 mx-auto max-w-7xl px-5 w-full">
-          <div className="max-w-2xl">
-            <p className="text-sm font-bold uppercase tracking-widest text-indigo-400 mb-4">✈️ Powered by AI</p>
-            <h1 className="text-5xl md:text-[64px] font-extrabold text-white tracking-tight leading-tight mb-6">
-              Get real-time airfares for anywhere.
-            </h1>
-            <p className="text-xl text-white/80 font-medium mb-10 leading-relaxed">
-              Just tell our AI where you want to go and we'll find the best deals — factored right into your travel plan.
-            </p>
-            <div className="bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-2xl">
+      <PageHeader 
+        title="Flights" 
+        subtitle="Get real-time airfares for anywhere, powered by AI."
+        imageContext="Airplane flying above clouds"
+      />
+
+      <section className="bg-slate-50 pt-10 pb-6">
+        <div className="mx-auto max-w-3xl px-5">
+            <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
               <AiChatSearch />
             </div>
-          </div>
         </div>
       </section>
 

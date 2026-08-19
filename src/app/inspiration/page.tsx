@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 const inspirations = [
   {
@@ -110,12 +111,15 @@ export default function InspirationPage() {
       </header>
 
       {/* Hero */}
-      <section className="bg-slate-50 py-20 text-center border-b border-gray-100">
-        <div className="mx-auto max-w-3xl px-5">
-          <h1 className="text-5xl md:text-[64px] font-extrabold text-gray-900 tracking-tight mb-6">Get inspired.</h1>
-          <p className="text-xl text-gray-600 font-medium mb-10">Explore popular destinations and start planning your Travora trip.</p>
+      <PageHeader 
+        title="Get inspired." 
+        subtitle="Explore popular destinations and start planning your Travora trip."
+        imageContext="Beautiful travel destination wanderlust inspiration"
+      />
 
-          {/* Filter tags */}
+      {/* Filter tags */}
+      <section className="bg-slate-50 pt-10 pb-6 text-center">
+        <div className="mx-auto max-w-3xl px-5">
           <div className="flex flex-wrap justify-center gap-3">
             {["All", "Beaches", "Mountains", "Cities", "Culture", "Food", "Adventure", "Romance", "Budget", "Luxury"].map((tag) => (
               <button 
