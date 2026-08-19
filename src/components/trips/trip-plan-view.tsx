@@ -288,9 +288,20 @@ export function TripPlanView({
                         </h4>
                       </div>
                       {price && (
-                        <span className="shrink-0 text-xs sm:text-sm font-extrabold text-slate-900 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-md">
-                          {price}
-                        </span>
+                        <div className="flex flex-col items-end gap-1">
+                          <span className="shrink-0 text-xs sm:text-sm font-extrabold text-slate-900 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-md">
+                            {price}
+                          </span>
+                          {price !== "Free" && (
+                            <span className="text-[10px] text-amber-600 font-semibold flex items-center gap-1">
+                              <span className="relative flex h-1.5 w-1.5">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500"></span>
+                              </span>
+                              AI Estimate
+                            </span>
+                          )}
+                        </div>
                       )}
                     </div>
 
@@ -423,6 +434,13 @@ export function TripPlanView({
                         <strong className="text-xl font-black text-blue-600">
                           {formatCurrency(deal.price)}
                         </strong>
+                        <span className="text-[10px] text-amber-600 font-semibold flex items-center justify-end gap-1 mt-0.5">
+                          <span className="relative flex h-1.5 w-1.5">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500"></span>
+                          </span>
+                          AI Estimate
+                        </span>
                       </div>
                     </div>
                     {affiliate && (
