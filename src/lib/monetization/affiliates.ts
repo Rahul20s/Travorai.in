@@ -154,58 +154,103 @@ function getCategoryConfig(category: string, providerName: string, linkType: Lin
   }
 }
 
-export function getAffiliateProvider(category: string, destination?: string, itemTitle?: string, origin?: string): AffiliateRecommendation | null {
+// ─── Helper: produce a date string YYYY-MM-DD offset from today ───────────────
+function offsetDate(daysFromNow: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + daysFromNow);
+  return d.toISOString().split("T")[0];
+}
+
+// ─── Helper: convert a city name to a lowercase URL slug ─────────────────────
+function toSlug(city: string): string {
+  return city.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+}
+
+// Booking.com affiliate ID — swap this env var once you have your aid number
+const BOOKING_AID = process.env.NEXT_PUBLIC_BOOKING_AID || "2311236";
+
+export function getAffiliateProvider(
+  category: string,
+  destination?: string,
+  itemTitle?: string,
+  origin?: string,
+  startDate?: string,      // ISO: "2025-12-15" — optional, falls back to 30 days from now
+  durationDays?: number    // trip length — used to calculate checkout date
+): AffiliateRecommendation | null {
   const normCategory = category.toLowerCase();
   const dest = destination || "World";
-  const orig = origin || "Delhi"; // Default origin if not provided
-  
-  // Try to generate a deep search link for Klook
-  if (normCategory === "activity" || normCategory === "tour" || normCategory === "attraction" || normCategory === "restaurant") {
-    // If we have an itemTitle and destination, we can make a provider_search link
-    const query = itemTitle && destination ? `${itemTitle} ${destination}` : (destination || "World");
-    const targetUrl = `https://www.klook.com/search/result/?query=${encodeURIComponent(query)}`;
-    const deepLink = generateTpMediaDeepLink("137", targetUrl, "travora_activity", "4110", "561821");
-    
+  const orig = origin || "Delhi";
+
+  // ── Compute dates (fallback: depart 30 days from now, return after durationDays) ──
+  const checkin  = startDate || offsetDate(30);
+  const checkout = (() => {
+    const base = new Date(checkin);
+    base.setDate(base.getDate() + (durationDays || 3));
+    return base.toISOString().split("T")[0];
+  })();
+  const [ciYear, ciMonth, ciDay]   = checkin.split("-");
+  const [coYear, coMonth, coDay]   = checkout.split("-");
+
+  // ── Activities / Tours / Restaurants → Klook (direct affiliate search, no wrapper) ──
+  if (
+    normCategory === "activity" ||
+    normCategory === "tour"     ||
+    normCategory === "attraction" ||
+    normCategory === "restaurant"
+  ) {
+    // Direct Klook search URL — no TravelPayouts wrapper to avoid extra redirects
+    const query = itemTitle && destination
+      ? `${destination} ${itemTitle}`
+      : dest;
+    const url = `https://www.klook.com/search/result/?query=${encodeURIComponent(query)}&aid=${TRAVELPAYOUTS_MARKER}`;
+
     const config = getCategoryConfig(normCategory, "Klook", "provider_search");
     return {
       providerName: "Klook",
-      url: deepLink,
-      ctaText: config.ctaText,
+      url,
+      ctaText: `Book "${itemTitle || dest}" on Klook →`,
       icon: config.icon,
       linkType: "provider_search",
       trackingSubId: "travora_activity"
     };
   }
 
+  // ── Hotels / Stays → Booking.com with city + date pre-fill ──────────────────
   if (normCategory === "stay" || normCategory === "hotel") {
-    // Klook's dedicated hotel search often 404s on deep links or requires strict IDs.
-    // The global search handles "Location Hotel" perfectly.
-    const targetUrl = `https://www.klook.com/search/result/?query=${encodeURIComponent(dest + ' Hotel')}`;
-    const deepLink = generateTpMediaDeepLink("137", targetUrl, "travora_hotel", "4110", "561821");
-    
-    const config = getCategoryConfig(normCategory, "Klook", "provider_search");
+    // Booking.com deep link: ss = city name, checkin/checkout split into year/month/day
+    const url =
+      `https://www.booking.com/searchresults.html` +
+      `?ss=${encodeURIComponent(dest)}` +
+      `&checkin_year=${ciYear}&checkin_month=${ciMonth}&checkin_monthday=${ciDay}` +
+      `&checkout_year=${coYear}&checkout_month=${coMonth}&checkout_monthday=${coDay}` +
+      `&aid=${BOOKING_AID}` +
+      `&label=travora-${toSlug(dest)}`;
+
     return {
-      providerName: "Klook",
-      url: deepLink,
-      ctaText: config.ctaText,
-      icon: config.icon,
+      providerName: "Booking.com",
+      url,
+      ctaText: `Find hotels in ${dest} on Booking.com →`,
+      icon: "🏨",
       linkType: "provider_search",
       trackingSubId: "travora_hotel"
     };
   }
 
-  // Flights via Kiwi.com
+  // ── Flights → Kiwi.com with origin, destination, and date pre-fill ──────────
   if (normCategory === "flight") {
-    // Kiwi.com elegantly parses string city names (unlike Aviasales which requires IATA).
-    // We construct the direct Kiwi deep link and append the TravelPayouts affilid with the user's marker.
-    // The format allows prefilling origin and destination.
-    const targetUrl = `https://www.kiwi.com/en/search/results/${encodeURIComponent(orig)}/${encodeURIComponent(dest)}?affilid=travelpayoutsdeeplink_${TRAVELPAYOUTS_MARKER}`;
-    
+    // Kiwi.com accepts city name slugs + ISO departure date in the URL path
+    const origSlug = toSlug(orig);
+    const destSlug = toSlug(dest);
+    const url =
+      `https://www.kiwi.com/en/search/results/${origSlug}/${destSlug}` +
+      `/${checkin}/${checkout}` +
+      `?affilid=travelpayoutsdeeplink_${TRAVELPAYOUTS_MARKER}`;
+
     const config = getCategoryConfig(normCategory, "Kiwi.com", "provider_search");
     return {
       providerName: "Kiwi.com",
-      url: targetUrl,
-      ctaText: config.ctaText,
+      url,
+      ctaText: `Search ${orig} → ${dest} flights on Kiwi →`,
       icon: config.icon,
       linkType: "provider_search",
       trackingSubId: "travora_flight"
