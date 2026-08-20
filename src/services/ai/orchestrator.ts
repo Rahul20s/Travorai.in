@@ -78,6 +78,8 @@ Rules:
 - Provide a "budgetBreakdown" array (category, amount in INR, percentage) summing to ~100%.
 - TRANSIT OPTIONS: In the 'deals' array, you MUST generate exactly 1 Flight option and 1 Train option from the User's Origin to the Destination. Provide a realistic estimated price in INR. Set the deal title to something like "Flight from Origin to Destination".
 - Use Unsplash image URLs for images.
+- IMPORTANT: Always include "travelers" in your response set to ${travelers} (the number of people in the group).
+- IMPORTANT: Always include "origin" in your response set to the user's origin city.
 
 User context:
 - ${originContext}

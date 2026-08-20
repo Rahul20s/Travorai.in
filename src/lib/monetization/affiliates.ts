@@ -175,11 +175,13 @@ export function getAffiliateProvider(
   itemTitle?: string,
   origin?: string,
   startDate?: string,      // ISO: "2025-12-15" — optional, falls back to 30 days from now
-  durationDays?: number    // trip length — used to calculate checkout date
+  durationDays?: number,   // trip length — used to calculate checkout date
+  travelers?: number       // number of travelers in the group
 ): AffiliateRecommendation | null {
   const normCategory = category.toLowerCase();
   const dest = destination || "World";
   const orig = origin || "Delhi";
+  const adults = travelers || 1;
 
   // ── Compute dates (fallback: depart 30 days from now, return after durationDays) ──
   const checkin  = startDate || offsetDate(30);
@@ -202,7 +204,7 @@ export function getAffiliateProvider(
     const query = itemTitle && destination
       ? `${destination} ${itemTitle}`
       : dest;
-    const url = `https://www.klook.com/search/result/?query=${encodeURIComponent(query)}&aid=${TRAVELPAYOUTS_MARKER}`;
+    const url = `https://www.klook.com/search/result/?query=${encodeURIComponent(query)}&aid=${TRAVELPAYOUTS_MARKER}&adults=${adults}`;
 
     const config = getCategoryConfig(normCategory, "Klook", "provider_search");
     return {
@@ -215,42 +217,42 @@ export function getAffiliateProvider(
     };
   }
 
-  // ── Hotels / Stays → Booking.com with city + date pre-fill ──────────────────
+  // ── Hotels / Stays → Booking.com with city + date + group size pre-fill ─────
   if (normCategory === "stay" || normCategory === "hotel") {
-    // Booking.com deep link: ss = city name, checkin/checkout split into year/month/day
     const url =
       `https://www.booking.com/searchresults.html` +
       `?ss=${encodeURIComponent(dest)}` +
       `&checkin_year=${ciYear}&checkin_month=${ciMonth}&checkin_monthday=${ciDay}` +
       `&checkout_year=${coYear}&checkout_month=${coMonth}&checkout_monthday=${coDay}` +
+      `&group_adults=${adults}&no_rooms=1` +
       `&aid=${BOOKING_AID}` +
       `&label=travora-${toSlug(dest)}`;
 
     return {
       providerName: "Booking.com",
       url,
-      ctaText: `Find hotels in ${dest} on Booking.com →`,
+      ctaText: `Find hotels in ${dest} for ${adults} on Booking.com →`,
       icon: "🏨",
       linkType: "provider_search",
       trackingSubId: "travora_hotel"
     };
   }
 
-  // ── Flights → Kiwi.com with origin, destination, and date pre-fill ──────────
+  // ── Flights → Kiwi.com with origin, destination, dates, and passenger count ─
   if (normCategory === "flight") {
-    // Kiwi.com accepts city name slugs + ISO departure date in the URL path
     const origSlug = toSlug(orig);
     const destSlug = toSlug(dest);
     const url =
       `https://www.kiwi.com/en/search/results/${origSlug}/${destSlug}` +
       `/${checkin}/${checkout}` +
-      `?affilid=travelpayoutsdeeplink_${TRAVELPAYOUTS_MARKER}`;
+      `?adults=${adults}&children=0&infants=0` +
+      `&affilid=travelpayoutsdeeplink_${TRAVELPAYOUTS_MARKER}`;
 
     const config = getCategoryConfig(normCategory, "Kiwi.com", "provider_search");
     return {
       providerName: "Kiwi.com",
       url,
-      ctaText: `Search ${orig} → ${dest} flights on Kiwi →`,
+      ctaText: `Search ${orig} → ${dest} flights for ${adults} on Kiwi →`,
       icon: config.icon,
       linkType: "provider_search",
       trackingSubId: "travora_flight"

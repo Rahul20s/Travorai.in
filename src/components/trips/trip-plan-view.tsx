@@ -244,7 +244,8 @@ export function TripPlanView({
                   ? "Free"
                   : formatCurrency(item.price);
 
-              const affiliate = getAffiliateProvider(type, trip.destination, item.title, trip.origin, (trip as any).startDate, trip.durationDays);
+              const affiliate = getAffiliateProvider(type, trip.destination, item.title, trip.origin, (trip as any).startDate, trip.durationDays, trip.travelers);
+
 
               return (
                 <div
@@ -388,7 +389,7 @@ export function TripPlanView({
           <div className="flex gap-5 overflow-x-auto pb-6 scrollbar-hide snap-x">
             {trip.deals.map((deal) => {
               const Icon = dealIcons[deal.type];
-              const affiliate = getAffiliateProvider(deal.type, deal.location || trip.destination, deal.title, trip.origin, (trip as any).startDate, trip.durationDays);
+              const affiliate = getAffiliateProvider(deal.type, deal.location || trip.destination, deal.title, trip.origin, (trip as any).startDate, trip.durationDays, trip.travelers);
 
 
               return (

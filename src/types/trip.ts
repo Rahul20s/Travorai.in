@@ -41,6 +41,8 @@ export type TripPlan = {
   weather: string;
   bestMonth: string;
   summary?: string;
+  travelers?: number;      // number of people in the group
+  startDate?: string;      // ISO date string e.g. "2025-12-15"
   budgetBreakdown?: BudgetBreakdown[];
   days: TripDay[];
   deals: Deal[];

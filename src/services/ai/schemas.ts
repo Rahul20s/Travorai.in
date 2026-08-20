@@ -33,6 +33,8 @@ export const tripPlanSchema = z.object({
   weather: z.string(),
   bestMonth: z.string(),
   summary: z.string().optional(),
+  travelers: z.number().int().positive().optional(),
+  startDate: z.string().optional(),
   budgetBreakdown: z.array(budgetBreakdownSchema).min(2).max(6).optional(),
   days: z.array(tripDaySchema),
   deals: z.array(
