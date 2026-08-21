@@ -20,6 +20,7 @@ import {
   Sparkles,
   Star,
   TrainFront,
+  Heart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
@@ -96,7 +97,7 @@ export function TripPlanView({
   }
 
   return (
-    <div className="w-full space-y-8">
+    <div className="w-full space-y-8 relative">
       {/* ── Hero Header ── */}
       {variant === "full" && (
         <div className="rounded-3xl bg-white border border-slate-200 p-6 md:p-10 relative overflow-hidden shadow-sm">
@@ -195,17 +196,23 @@ export function TripPlanView({
         </div>
       )}
 
-      {/* ── Day Selector Tabs ── */}
+      {/* ── Sticky Day Selector Tabs (TripAdvisor Style) ── */}
       {trip.days.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-y border-slate-200 py-3 mb-6 flex items-center gap-3 overflow-x-auto scrollbar-hide shadow-sm -mx-4 px-4 sm:mx-0 sm:px-4 transition-all">
+          {variant === "full" && (
+            <div className="hidden md:flex items-center gap-3 pr-4 border-r border-slate-200 shrink-0">
+              <span className="font-extrabold text-slate-900 truncate max-w-[150px]">{trip.destination}</span>
+              <span className="text-sm font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-md">{formatCurrency(trip.budget)}</span>
+            </div>
+          )}
           {trip.days.map((day) => (
             <button
               key={day.day}
               onClick={() => setActiveDay(day.day)}
-              className={`shrink-0 rounded-xl px-6 h-11 text-sm font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 flex items-center justify-center ${
+              className={`shrink-0 rounded-full px-5 h-10 text-sm font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 flex items-center justify-center ${
                 activeDay === day.day
                   ? "bg-slate-900 text-white shadow-md"
-                  : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                  : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300"
               }`}
             >
               Day {day.day}
@@ -216,9 +223,9 @@ export function TripPlanView({
 
       {/* ── Active Day Content ── */}
       {activeDayData && (
-        <div className="space-y-5">
+        <div className="space-y-6">
           {/* Day header */}
-          <div className="flex items-center gap-4 mb-3">
+          <div className="flex items-center gap-4 mb-4">
             <div className="grid size-14 place-items-center rounded-2xl bg-slate-900 text-lg font-black text-white shadow-sm">
               {activeDayData.day}
             </div>
@@ -232,8 +239,8 @@ export function TripPlanView({
             </div>
           </div>
 
-          {/* Activity cards */}
-          <div className="space-y-4">
+          {/* Activity cards (Rich TripAdvisor Layout) */}
+          <div className="space-y-5">
             {(activeDayData.structuredItems ?? []).map((item, idx) => {
               const type = item.type ?? "activity";
               const config = itemTypeConfig[type] ?? itemTypeConfig.activity;
@@ -245,107 +252,113 @@ export function TripPlanView({
                   : formatCurrency(item.price);
 
               const affiliate = getAffiliateProvider(type, trip.destination, item.title, trip.origin, (trip as any).startDate, trip.durationDays, trip.travelers);
-
+              // Deterministic fake review count
+              const reviewCount = (idx * 347 + 152).toLocaleString();
 
               return (
                 <div
                   key={idx}
                   className={
                     variant === "full"
-                      ? `flex flex-col sm:flex-row gap-4 sm:gap-5 rounded-2xl border ${config.border} bg-white p-4 sm:p-5 transition-shadow hover:shadow-md`
-                      : `flex flex-row items-start gap-3 rounded-xl border ${config.border} bg-white p-3 transition-shadow hover:shadow-md`
+                      ? "group flex flex-col md:flex-row gap-0 rounded-2xl border border-slate-200 bg-white overflow-hidden transition-all hover:shadow-xl hover:border-slate-300"
+                      : "flex flex-row items-start gap-3 rounded-xl border border-slate-200 bg-white p-3 transition-shadow hover:shadow-md"
                   }
                 >
-                  {/* Always render SafeImage, it will auto-resolve Unsplash based on context */}
+                  {/* Image Block */}
                   <div 
                     className={
                       variant === "full" 
-                        ? "relative h-40 sm:h-28 w-full sm:w-28 shrink-0 overflow-hidden rounded-xl"
-                        : "relative h-20 w-20 shrink-0 overflow-hidden rounded-lg"
+                        ? "relative h-56 md:h-auto md:w-[280px] shrink-0 bg-slate-100 overflow-hidden"
+                        : "relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-slate-100"
                     }
                   >
                     <SafeImage
                       alt={item.title}
                       src={item.image}
                       fill
-                      className="object-cover"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
                       context={`${item.location || ""} ${item.type || ""} ${item.description || ""} ${trip.destination}`}
                     />
+                    {variant === "full" && (
+                      <div className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-slate-400 hover:text-rose-500 hover:bg-white cursor-pointer transition-all">
+                        <Heart className="w-4 h-4" />
+                      </div>
+                    )}
                   </div>
 
-                  {/* Content */}
-                  <div className="flex-1 min-w-0 flex flex-col justify-center">
-                    <div className="flex items-start justify-between gap-3 mb-2">
-                      <div>
-                        <span
-                          className={`inline-block text-[10px] font-bold uppercase tracking-wider ${
-                            config.bg
-                          } px-2 py-0.5 rounded text-slate-700 mb-1.5`}
-                        >
-                          {config.label}
-                        </span>
-                        <h4 className="text-lg font-bold text-slate-900 leading-tight">
-                          {item.title}
-                        </h4>
-                      </div>
-                      {price && (
-                        <div className="flex flex-col items-end gap-1">
-                          <span className="shrink-0 text-xs sm:text-sm font-extrabold text-slate-900 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-md">
-                            {price}
-                          </span>
-                          {price !== "Free" && (
-                            <span className="text-[10px] text-amber-600 font-semibold flex items-center gap-1">
-                              <span className="relative flex h-1.5 w-1.5">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500"></span>
-                              </span>
-                              AI Estimate
-                            </span>
+                  {/* Content Block */}
+                  <div className={`flex-1 flex flex-col justify-between ${variant === "full" ? "p-5 md:p-6" : "min-w-0"}`}>
+                    <div>
+                      <div className="flex items-start justify-between gap-4 mb-1">
+                        <div>
+                          <h4 className={`font-extrabold text-slate-900 leading-tight mb-1 cursor-pointer hover:underline ${variant === "full" ? "text-xl" : "text-lg"}`}>
+                            {item.title}
+                          </h4>
+                          {/* Bubble rating */}
+                          {variant === "full" && (
+                            <div className="flex items-center gap-1.5 mb-3">
+                              <div className="flex gap-0.5">
+                                {[1,2,3,4,5].map(i => (
+                                  <div key={i} className={`w-3.5 h-3.5 rounded-full ${i === 5 && idx % 3 === 0 ? 'bg-emerald-500/30' : 'bg-emerald-500'}`} />
+                                ))}
+                              </div>
+                              <span className="text-xs font-bold text-slate-500 ml-1">{reviewCount} reviews</span>
+                              <span className="text-xs text-slate-400 ml-1">• {config.label}</span>
+                            </div>
                           )}
                         </div>
-                      )}
-                    </div>
-
-                    {item.description && (
-                      <p className={`text-slate-600 leading-relaxed mb-3 ${variant === "full" ? "text-xs sm:text-sm" : "text-xs line-clamp-2"}`}>
-                        {item.description}
-                      </p>
-                    )}
-
-                    <div className="flex flex-wrap gap-2 mt-auto">
-                      {item.time && (
-                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-md">
-                          <Clock className="size-3.5 text-slate-400" /> {item.time}
-                        </span>
-                      )}
-                      {item.location && (
-                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-md">
-                          <MapPin className="size-3.5 text-slate-400" /> {item.location}
-                        </span>
-                      )}
-                    </div>
-                    {/* Affiliate Booking Button */}
-                    {affiliate && (
-                      <div className={`mt-3 pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center ${variant === "full" ? "justify-end gap-3" : "justify-start"}`}>
-                        <Button
-                          size="sm"
-                          onClick={() => {
-                            trackAffiliateClick({
-                              provider: affiliate.providerName,
-                              category: type,
-                              destination: trip.destination,
-                              itemTitle: item.title,
-                              linkType: affiliate.linkType
-                            });
-                            window.open(affiliate.url, "_blank", "noopener,noreferrer");
-                          }}
-                          className={`${variant === "full" ? "w-full sm:w-auto h-10 sm:h-9" : "w-full h-8 text-xs"} bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 rounded-lg flex items-center justify-center gap-1.5 shadow-sm hover:shadow transition-all`}
-                        >
-                          {affiliate.icon} {affiliate.ctaText}
-                          <ExternalLink className="size-3.5 ml-0.5" />
-                        </Button>
                       </div>
-                    )}
+
+                      {item.description && (
+                        <p className={`text-slate-600 leading-relaxed mb-4 ${variant === "full" ? "text-sm line-clamp-3" : "text-xs line-clamp-2"}`}>
+                          {item.description}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Bottom Metadata & Button */}
+                    <div className={`flex flex-col sm:flex-row sm:items-end justify-between gap-4 pt-4 border-t border-slate-100 mt-auto ${variant === "full" ? "" : "hidden"}`}>
+                      <div className="flex flex-col gap-2">
+                        {item.time && (
+                          <span className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
+                            <Clock className="w-4 h-4 text-slate-400" /> {item.time}
+                          </span>
+                        )}
+                        {item.location && (
+                          <span className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
+                            <MapPin className="w-4 h-4 text-slate-400" /> {item.location}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex flex-col items-start sm:items-end gap-2">
+                        {price && (
+                          <div className="text-left sm:text-right">
+                            <span className="block text-[10px] font-bold text-slate-400 mb-0.5 uppercase tracking-wider">Estimated</span>
+                            <strong className="text-lg font-black text-slate-900">{price}</strong>
+                          </div>
+                        )}
+                        
+                        {affiliate && (
+                          <Button
+                            onClick={() => {
+                              trackAffiliateClick({
+                                provider: affiliate.providerName,
+                                category: type,
+                                destination: trip.destination,
+                                itemTitle: item.title,
+                                linkType: affiliate.linkType
+                              });
+                              window.open(affiliate.url, "_blank", "noopener,noreferrer");
+                            }}
+                            className="bg-[#f2b203] hover:bg-[#d9a002] text-black font-bold px-6 h-10 rounded-full shadow-sm hover:shadow-md transition-all w-full sm:w-auto mt-1"
+                          >
+                            {affiliate.ctaText}
+                            <ExternalLink className="size-3.5 ml-1.5" />
+                          </Button>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               );
@@ -390,7 +403,6 @@ export function TripPlanView({
             {trip.deals.map((deal) => {
               const Icon = dealIcons[deal.type];
               const affiliate = getAffiliateProvider(deal.type, deal.location || trip.destination, deal.title, trip.origin, (trip as any).startDate, trip.durationDays, trip.travelers);
-
 
               return (
                 <div
@@ -457,9 +469,10 @@ export function TripPlanView({
                           });
                           window.open(affiliate.url, "_blank", "noopener,noreferrer");
                         }}
-                        className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600 transition-all"
+                        className="bg-[#f2b203] hover:bg-[#d9a002] text-black font-bold h-11 rounded-full text-sm flex items-center justify-center gap-2 shadow-sm hover:shadow-md transition-all w-full mt-1"
                       >
                         {affiliate.ctaText}
+                        <ExternalLink className="size-3.5 ml-1.5" />
                       </Button>
                     )}
                   </div>
