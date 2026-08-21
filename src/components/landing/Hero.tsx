@@ -3,15 +3,22 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
-import { Send, Sparkles, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Sparkles, Loader2, Search, Map, Calendar, Check, Globe } from "lucide-react";
 
-const QUICK_PROMPTS = [
-  { text: "Goa for 2 days under ₹20K", val: "Plan a 2-day Goa trip under ₹20,000 with beaches and nightlife" },
-  { text: "Paris honeymoon", val: "Plan a romantic Paris honeymoon itinerary for 6 days with luxury stays" },
-  { text: "Dubai with family", val: "Plan a 5-day Dubai trip with family, budget-friendly and kid-friendly attractions" },
-  { text: "Solo trip to Bali", val: "Plan a solo adventure in Bali for 7 days focusing on nature and temples" },
-  { text: "Weekend trip from Mumbai", val: "Plan a quick 2-day weekend getaway from Mumbai to Lonavala" },
+const PLACEHOLDERS = [
+  "Plan a 5-day trip to Bali...",
+  "A romantic weekend in Goa...",
+  "Solo backpacking in Thailand...",
+  "Family holiday in Dubai for 4 days...",
+  "Budget trip to Rishikesh under ₹15K..."
+];
+
+const QUICK_PILLS = [
+  { text: "Beach Vibe", icon: "🏖️", val: "Plan a relaxing beach vacation with water sports" },
+  { text: "Mountains", icon: "🏔️", val: "Plan a mountain trek and nature getaway" },
+  { text: "Luxury", icon: "👑", val: "Plan a luxury 5-star trip with premium experiences" },
+  { text: "Culture", icon: "🕌", val: "Plan a cultural and historical sightseeing trip" },
+  { text: "Foodie", icon: "🍝", val: "Plan a food-focused trip to taste local delicacies" },
 ];
 
 export function Hero() {
@@ -20,6 +27,36 @@ export function Hero() {
   const [input, setInput] = useState("");
   const [isNavigating, setIsNavigating] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Typewriter effect state
+  const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const [displayText, setDisplayText] = useState("");
+  const [isTyping, setIsTyping] = useState(true);
+
+  // Typewriter effect logic
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+
+    if (isTyping) {
+      if (displayText.length < PLACEHOLDERS[placeholderIndex].length) {
+        timeout = setTimeout(() => {
+          setDisplayText(PLACEHOLDERS[placeholderIndex].slice(0, displayText.length + 1));
+        }, 40); // Typing speed
+      } else {
+        timeout = setTimeout(() => setIsTyping(false), 2500); // Wait before deleting
+      }
+    } else {
+      if (displayText.length > 0) {
+        timeout = setTimeout(() => {
+          setDisplayText(displayText.slice(0, -1));
+        }, 20); // Deleting speed
+      } else {
+        setPlaceholderIndex((prev) => (prev + 1) % PLACEHOLDERS.length);
+        setIsTyping(true);
+      }
+    }
+    return () => clearTimeout(timeout);
+  }, [displayText, isTyping, placeholderIndex]);
 
   // Auto-grow textarea
   useEffect(() => {
@@ -39,12 +76,9 @@ export function Hero() {
     setIsNavigating(true);
 
     if (!isSignedIn) {
-      // Unauthenticated User: Capture and preserve input temporarily
       localStorage.setItem("pending_trip_prompt", promptText);
-      // Redirect to login, which redirect back to dashboard
       router.push(`/sign-in?redirect_url=/dashboard`);
     } else {
-      // Authenticated User: Navigate to dashboard and planning trigger
       router.push(`/dashboard?prompt=${encodeURIComponent(promptText)}`);
     }
   };
@@ -57,84 +91,113 @@ export function Hero() {
   };
 
   return (
-    <section id="hero-chat" className="relative min-h-[75vh] w-full flex flex-col items-center justify-center pt-24 pb-16 overflow-hidden">
-      {/* Visual Background image with stable direct id */}
+    <section id="hero-chat" className="relative min-h-[80vh] w-full flex flex-col items-center justify-center pt-28 pb-16 overflow-hidden">
+      {/* Visual Background image */}
       <div className="absolute inset-0 z-0">
         <img
           src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=2000&q=80"
           alt="Beautiful tropical beach destination"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px]" />
       </div>
 
-      <div className="relative z-10 mx-auto w-full max-w-4xl px-6 text-center flex flex-col items-center mt-8">
-        <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-tight drop-shadow-sm mb-4 max-w-3xl">
-          Where to today?
+      <div className="relative z-10 mx-auto w-full max-w-5xl px-4 md:px-6 text-center flex flex-col items-center">
+        <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-tight drop-shadow-md mb-6 max-w-4xl">
+          Where to?
         </h1>
         
-        <p className="text-lg md:text-xl font-medium text-slate-200/90 max-w-2xl mb-12 leading-relaxed">
-          Tell Travora where you want to go, what you love, and what you want to spend.
-        </p>
+        {/* The Premium Search Widget (TripAdvisor Style) */}
+        <div className="w-full max-w-4xl bg-white rounded-[32px] shadow-2xl p-3 md:p-4 mb-8 mt-2 transition-transform duration-300 hover:scale-[1.01]">
+          
+          {/* Segmented Tabs */}
+          <div className="flex items-center gap-2 border-b border-slate-100 pb-3 mb-3 px-2 overflow-x-auto scrollbar-hide">
+            <button className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-full text-sm font-bold shrink-0 transition-transform active:scale-95">
+              <Sparkles className="w-4 h-4" /> AI Planner
+            </button>
+            <button className="flex items-center gap-2 px-4 py-2 hover:bg-slate-100 text-slate-600 rounded-full text-sm font-medium transition-colors shrink-0">
+              <Map className="w-4 h-4" /> Destinations
+            </button>
+            <button className="flex items-center gap-2 px-4 py-2 hover:bg-slate-100 text-slate-600 rounded-full text-sm font-medium transition-colors shrink-0">
+              <Calendar className="w-4 h-4" /> Weekend Trips
+            </button>
+            <button className="flex items-center gap-2 px-4 py-2 hover:bg-slate-100 text-slate-600 rounded-full text-sm font-medium transition-colors shrink-0">
+              <Globe className="w-4 h-4" /> International
+            </button>
+          </div>
 
-        {/* AI Travel Planner input box */}
-        <form onSubmit={handleSubmit} className="w-full max-w-3xl group relative mb-8">
-          <div className="relative bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-2 pl-6 transition-all duration-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-600/20 focus-within:border-blue-600 flex items-end gap-3">
+          {/* Input Area */}
+          <form onSubmit={handleSubmit} className="relative flex flex-col sm:flex-row items-end sm:items-center gap-3 px-2 pb-1">
+            <div className="absolute left-6 top-5 text-slate-400 hidden sm:block">
+              <Search className="w-6 h-6" />
+            </div>
             <textarea
               ref={textareaRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               disabled={isNavigating}
-              placeholder="e.g. '5 days in Goa under ₹20K with beaches and nightlife'..."
-              className="flex-1 max-h-[150px] min-h-[48px] py-3 resize-none bg-transparent outline-none text-slate-900 text-base md:text-lg font-medium placeholder:text-slate-400 placeholder:font-normal disabled:opacity-50"
+              placeholder={displayText}
+              className="flex-1 w-full max-h-[150px] min-h-[60px] py-4 sm:pl-14 pr-4 resize-none bg-transparent outline-none text-slate-900 text-lg md:text-xl font-medium placeholder:text-slate-400 disabled:opacity-50"
               rows={1}
             />
             <button
               type="submit"
               disabled={!input.trim() || isNavigating}
-              className="mb-1 h-12 px-6 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold disabled:opacity-60 disabled:cursor-not-allowed transition-all flex items-center justify-center shrink-0 shadow-md hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600 w-[140px]"
+              className="w-full sm:w-auto rounded-full h-14 px-8 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg disabled:opacity-60 disabled:cursor-not-allowed transition-all flex items-center justify-center shrink-0 shadow-md hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600"
             >
               {isNavigating ? (
                 <>
                   <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Loading...
+                  Building...
                 </>
               ) : (
-                <>
-                  <Sparkles className="w-5 h-5 mr-2 hidden sm:block" />
-                  Plan Trip
-                </>
+                "Plan Trip"
               )}
             </button>
-          </div>
-        </form>
+          </form>
+        </div>
 
-        {/* Suggestion Chips */}
-        <div className="w-full max-w-3xl">
-          <p className="text-xs font-bold text-white/80 uppercase tracking-widest mb-4">
-            Try asking for
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-2.5">
-            {QUICK_PROMPTS.map((prompt, i) => (
-              <button
-                key={i}
-                onClick={() => handleSubmit(undefined, prompt.val)}
-                disabled={isNavigating}
-                className="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-sm font-semibold text-white transition-all hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white flex items-center gap-2 disabled:opacity-50 disabled:hover:-translate-y-0"
-              >
-                {isNavigating && input === prompt.val ? (
-                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                ) : (
-                   <Sparkles className="w-3.5 h-3.5 text-blue-300" />
-                )}
-                {prompt.text}
-              </button>
-            ))}
+        {/* Quick Start Pills */}
+        <div className="w-full max-w-4xl flex flex-wrap items-center justify-center gap-3 mb-10">
+          {QUICK_PILLS.map((pill, i) => (
+            <button
+              key={i}
+              onClick={() => handleSubmit(undefined, pill.val)}
+              disabled={isNavigating}
+              className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-sm font-medium text-white transition-all hover:-translate-y-1 hover:shadow-lg flex items-center gap-2 disabled:opacity-50 disabled:hover:-translate-y-0"
+            >
+              <span>{pill.icon}</span>
+              {pill.text}
+            </button>
+          ))}
+        </div>
+
+        {/* Trust Badges */}
+        <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-white/90 font-medium text-sm md:text-base">
+          <div className="flex items-center gap-2">
+            <span className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center backdrop-blur-sm border border-blue-400/30">
+              <Check className="w-3.5 h-3.5 text-blue-300" />
+            </span>
+            10,000+ Trips Planned
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center backdrop-blur-sm border border-green-400/30">
+              <Check className="w-3.5 h-3.5 text-green-300" />
+            </span>
+            Free Direct Bookings
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center backdrop-blur-sm border border-purple-400/30">
+              <Check className="w-3.5 h-3.5 text-purple-300" />
+            </span>
+            Powered by GPT-4 AI
           </div>
         </div>
+
       </div>
     </section>
   );
 }
+
 export default Hero;
