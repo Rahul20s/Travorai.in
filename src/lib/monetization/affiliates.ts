@@ -210,7 +210,7 @@ export function getAffiliateProvider(
     return {
       providerName: "Klook",
       url,
-      ctaText: `Book "${itemTitle || dest}" on Klook →`,
+      ctaText: "Book now",
       icon: config.icon,
       linkType: "provider_search",
       trackingSubId: "travora_activity"
@@ -231,7 +231,7 @@ export function getAffiliateProvider(
     return {
       providerName: "Booking.com",
       url,
-      ctaText: `Find hotels in ${dest} for ${adults} on Booking.com →`,
+      ctaText: "Book now",
       icon: "🏨",
       linkType: "provider_search",
       trackingSubId: "travora_hotel"
@@ -252,7 +252,7 @@ export function getAffiliateProvider(
     return {
       providerName: "Kiwi.com",
       url,
-      ctaText: `Search ${orig} → ${dest} flights for ${adults} on Kiwi →`,
+      ctaText: "Book now",
       icon: config.icon,
       linkType: "provider_search",
       trackingSubId: "travora_flight"

@@ -123,6 +123,11 @@ export async function planTrip(input: TripPlanningInput): Promise<TripPlan> {
       }
     }
 
+    // Inject context provided by the orchestrator so it never misses
+    if (input.origin) object.origin = input.origin;
+    if (input.startDate) object.startDate = input.startDate;
+    if (input.travelers) object.travelers = input.travelers;
+
     return object;
   } catch (error) {
     console.error("[ai-orchestrator] AI provider call failed, falling back to mock:", error);

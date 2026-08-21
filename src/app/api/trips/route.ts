@@ -8,6 +8,8 @@ const tripRequestSchema = z.object({
   prompt: z.string().min(5),
   budget: z.number().positive().optional(),
   travelers: z.number().int().positive().optional(),
+  origin: z.string().optional(),
+  startDate: z.string().optional(),
   mood: z.enum(["relax", "adventure", "romantic", "family", "backpacking", "luxury"]).optional(),
   travelStyles: z.array(z.string()).optional()
 });

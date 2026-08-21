@@ -6,6 +6,7 @@ export type TripPlanningInput = {
   prompt: string;
   userId?: string;
   origin?: string;
+  startDate?: string;
   budget?: number;
   travelers?: number;
   mood?: "relax" | "adventure" | "romantic" | "family" | "backpacking" | "luxury";

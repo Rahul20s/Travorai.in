@@ -5,6 +5,8 @@ export type TripEngineInput = {
   userId?: string;
   budget?: number;
   travelers?: number;
+  origin?: string;
+  startDate?: string;
   mood?: "relax" | "adventure" | "romantic" | "family" | "backpacking" | "luxury";
   travelStyles?: string[];
   dates?: {
@@ -32,6 +34,8 @@ export async function buildTrip(input: TripEngineInput): Promise<TripEngineResul
     userId: input.userId,
     budget: input.budget,
     travelers: input.travelers,
+    origin: input.origin,
+    startDate: input.startDate,
     mood: input.mood,
     travelStyles: input.travelStyles
   });
