@@ -255,25 +255,48 @@ export function AiChatSearch({ variant = "hero" }: AiChatSearchProps) {
               if (msg.toolInvocations && msg.toolInvocations.length > 0) return null;
               if (!msg.content) return null;
 
+              const isAssistant = msg.role === "assistant";
+              // Extract text inside brackets [Like This]
+              const optionsMatch = isAssistant ? Array.from(msg.content.matchAll(/\[(.*?)\]/g)) : [];
+              const options = optionsMatch.map(m => m[1]);
+              // Remove brackets from main text
+              const displayContent = isAssistant ? msg.content.replace(/\[.*?\]/g, "").trim() : msg.content;
+
               return (
-                <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                <div key={msg.id} className={`flex flex-col ${!isAssistant ? "items-end" : "items-start"}`}>
                   <div
                     className={`max-w-[85%] rounded-2xl p-4 shadow-sm ${
-                      msg.role === "user"
+                      !isAssistant
                         ? "bg-slate-900 text-white font-medium rounded-tr-sm"
                         : "bg-white border border-slate-200 text-slate-700 rounded-tl-sm"
                     }`}
                   >
-                    {msg.role === "assistant" && (
+                    {isAssistant && (
                       <div className="flex items-center gap-2 mb-2 text-xs font-bold text-blue-600 uppercase tracking-wider">
                         <Sparkles className="w-3.5 h-3.5" />
                         Travora AI
                       </div>
                     )}
                     <div className="prose prose-sm max-w-none text-current whitespace-pre-wrap font-medium">
-                      {msg.content}
+                      {displayContent}
                     </div>
                   </div>
+                  
+                  {/* Quick Replies below the bubble */}
+                  {options.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-3 ml-2">
+                      {options.map((opt, i) => (
+                        <button
+                          key={i}
+                          onClick={() => append({ role: "user", content: opt })}
+                          disabled={isWorking}
+                          className="px-4 py-2 rounded-xl bg-blue-50 border border-blue-200 text-blue-700 text-sm font-bold hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {opt}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               );
             })
