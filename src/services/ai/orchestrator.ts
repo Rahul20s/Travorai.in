@@ -76,7 +76,9 @@ Rules:
 - For each day provide a rich "structuredItems" array with title, description, type (flight/stay/activity/restaurant/transport/note), time, location and optional image (Unsplash URL).
 - Provide a concise one-sentence "summary" of the trip.
 - Provide a "budgetBreakdown" array (category, amount in INR, percentage) summing to ~100%.
-- TRANSIT OPTIONS: In the 'deals' array, you MUST generate exactly 1 Flight option and 1 Train option from the User's Origin to the Destination. Provide a realistic estimated price in INR. Set the deal title to something like "Flight from Origin to Destination".
+- TRANSIT OPTIONS: In the 'deals' array, you MUST generate exactly 1 Flight option and 1 Train option from the User's Origin to the Destination.
+- IMPORTANT: For Flight and Train deals, set the 'location' field to the EXACT name of the nearest major airport/station city (e.g., "Indore", "Delhi"). Do not write "Indore (nearest airport)". Just the city name.
+- Provide a realistic estimated price in INR. Set the deal title to something like "Flight from Origin to Destination".
 - Use Unsplash image URLs for images.
 - IMPORTANT: Always include "travelers" in your response set to ${travelers} (the number of people in the group).
 - IMPORTANT: Always include "origin" in your response set to the user's origin city.

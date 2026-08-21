@@ -163,7 +163,11 @@ function offsetDate(daysFromNow: number): string {
 
 // ─── Helper: convert a city name to a lowercase URL slug ─────────────────────
 function toSlug(city: string): string {
-  return city.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+  // Remove anything in parentheses (e.g. "Indore (nearest airport)" -> "Indore")
+  let clean = city.replace(/\s*\(.*?\)\s*/g, "");
+  // Take only the first part before a comma (e.g. "Paris, France" -> "Paris")
+  clean = clean.split(",")[0].trim();
+  return clean.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
 }
 
 // Booking.com affiliate ID — swap this env var once you have your aid number
@@ -270,7 +274,7 @@ export function getAffiliateProvider(
     return {
       providerName: "Klook",
       url: deepLink,
-      ctaText: "Check train tickets on Klook →",
+      ctaText: "Book now",
       icon: "🚆",
       linkType: "provider_search",
       trackingSubId: "travora_train"
