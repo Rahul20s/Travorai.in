@@ -215,8 +215,8 @@ export default async function DashboardPage() {
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.75) 100%)" }} />
-                    <div className="absolute bottom-5 left-5 right-5">
+                    <div className="absolute inset-0 z-10" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.75) 100%)" }} />
+                    <div className="absolute bottom-5 left-5 right-5 z-20">
                       <span className="inline-block px-2.5 py-1 text-[10px] font-bold text-white bg-blue-600 rounded-md mb-2 shadow-sm">
                         {item.tags}
                       </span>

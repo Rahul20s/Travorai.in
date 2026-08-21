@@ -9,40 +9,60 @@ export interface TravelImageContext {
   type?: string | null;
 }
 
-export const DEFAULT_FALLBACK = "https://image.pollinations.ai/prompt/beautiful%20travel%20destination%20landscape%20photography?width=800&height=600&nologo=true";
+const DESTINATION_IMAGES: Record<string, string> = {
+  // Guaranteed fast, reliable Wikimedia Commons images for main dashboard cards
+  goa: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Goa_beach_sunset.jpg/800px-Goa_beach_sunset.jpg",
+  dubai: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Dubai_Skylines_at_night_%28Pexels_3787839%29.jpg/800px-Dubai_Skylines_at_night_%28Pexels_3787839%29.jpg",
+  bali: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Bali_Indonesia_Pura-Ulun-Danu-Bratan-01.jpg/800px-Bali_Indonesia_Pura-Ulun-Danu-Bratan-01.jpg",
+  kashmir: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Dal_Lake_Srinagar_Kashmir.jpg/800px-Dal_Lake_Srinagar_Kashmir.jpg",
+  paris: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/La_Tour_Eiffel_vue_de_la_Tour_Saint-Jacques_0002.jpg/800px-La_Tour_Eiffel_vue_de_la_Tour_Saint-Jacques_0002.jpg",
+  switzerland: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Matterhorn_from_Domh%C3%BCtte_-_2.jpg/800px-Matterhorn_from_Domh%C3%BCtte_-_2.jpg",
+  kerala: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Kerala_backwaters_boating.jpg/800px-Kerala_backwaters_boating.jpg",
+  rajasthan: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Hawa_Mahal%2C_Jaipur%2C_Rajasthan.jpg/800px-Hawa_Mahal%2C_Jaipur%2C_Rajasthan.jpg",
+  himachal: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Manali_City.jpg/800px-Manali_City.jpg",
+  london: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/London_Montage_L.jpg/800px-London_Montage_L.jpg",
+  tokyo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Skyscrapers_of_Shinjuku_2009_January.jpg/800px-Skyscrapers_of_Shinjuku_2009_January.jpg",
+  rome: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Colosseum_in_Rome%2C_Italy_-_April_2007.jpg/800px-Colosseum_in_Rome%2C_Italy_-_April_2007.jpg",
+  maldives: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Maldives_resort.jpg/800px-Maldives_resort.jpg"
+};
+
+export const DEFAULT_FALLBACK = "https://picsum.photos/800/600";
+
+function findBestMatch(text: string, dictionary: Record<string, string>): string | null {
+  const lowerText = text.toLowerCase();
+  const keys = Object.keys(dictionary).sort((a, b) => b.length - a.length);
+  for (const key of keys) {
+    if (lowerText.includes(key)) {
+      return dictionary[key];
+    }
+  }
+  return null;
+}
 
 /**
  * Centralized Image Resolver
- * Resolves a context string to a highly stable travel image using Pollinations AI.
- * This guarantees a beautiful, context-aware image even if the AI hallucinates a URL or Unsplash 403s.
+ * Uses rock-solid fast Wikimedia Commons images for known destinations,
+ * and falls back to fastly-cached picsum for anything else so we NEVER time out.
  */
 export function resolveTravelImage(contextInput: TravelImageContext | string): string {
-  // Normalize input into a search string
   let searchContext = "";
   if (typeof contextInput === "string") {
     searchContext = contextInput;
   } else {
-    // Prioritize descriptive fields
-    const parts = [];
-    if (contextInput.destination) parts.push(contextInput.destination);
-    if (contextInput.location) parts.push(contextInput.location);
-    if (contextInput.title) parts.push(contextInput.title);
-    if (contextInput.category) parts.push(contextInput.category);
-    
-    searchContext = parts.length > 0 
-      ? parts.join(" ") 
-      : Object.values(contextInput).filter((v) => typeof v === "string" && v.trim().length > 0).join(" ");
+    searchContext = Object.values(contextInput)
+      .filter((v) => typeof v === "string" && v.trim().length > 0)
+      .join(" ");
   }
 
-  searchContext = searchContext.trim();
-  
-  if (!searchContext) {
-    return DEFAULT_FALLBACK;
+  // 1. Try to match highly reliable known destination images first
+  const destMatch = findBestMatch(searchContext, DESTINATION_IMAGES);
+  if (destMatch) return destMatch;
+
+  // 2. Fallback to picsum seeded with the destination name (fast, never 404s, prevents timeouts)
+  const seedWord = searchContext.trim().split(" ")[0].toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (seedWord) {
+    return `https://picsum.photos/seed/${seedWord}/800/600`;
   }
 
-  // Add some photography keywords to make it look like a high-quality travel photo
-  const prompt = `${searchContext} beautiful travel photography high quality`;
-  
-  // Use pollinations.ai to generate a reliable context-aware image on the fly
-  return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=600&nologo=true`;
+  return DEFAULT_FALLBACK;
 }
